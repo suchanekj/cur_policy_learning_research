@@ -5,9 +5,7 @@ from gym.envs.registration import registry, register, make, spec
 import random
 import numpy as np
 
-import random
 
-import numpy
 
 from deap import algorithms
 from deap import base
