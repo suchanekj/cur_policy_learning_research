@@ -37,5 +37,5 @@ def reward_custom(state, rew_idx):
         # reward based on GPE and KE
         # 338 iterations
         return 0.5*velocity*velocity +math.sin(3*position)*g/3
-    if rew_idx==5
+    if rew_idx==5:
         return distance + (height*1000)
