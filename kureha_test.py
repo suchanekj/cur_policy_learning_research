@@ -203,7 +203,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         if render and i % 50 == 0:
             agent.env.render()
         #using rew_index = 3 atm
-        r = reward_custom(s, 3)
+        r = reward_custom(s, 5)
         current_reward += r
         state_history.append(s)
         reward_history.append(r)

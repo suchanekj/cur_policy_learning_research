@@ -15,9 +15,10 @@ import math
 
 def reward_custom(state, rew_idx):
     # Copy the termination conditions from the gym 
-    x_threshold = 2.4
-    g = 0.0025
-    position, velocity = state
+    #x_threshold = 2.4
+    #g = 0.0025
+    #position, velocity = state
+    distance, height = state
     if rew_idx==0:
         return -1.0
     if rew_idx==1:
@@ -36,3 +37,5 @@ def reward_custom(state, rew_idx):
         # reward based on GPE and KE
         # 338 iterations
         return 0.5*velocity*velocity +math.sin(3*position)*g/3
+    if rew_idx==5
+        return distance + (height*1000)
