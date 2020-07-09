@@ -23,8 +23,9 @@ os.environ["CUDA_VISIBLE_DEVICES"]=""
 kwargs = {
     'reward_type': 'sparse',
 }
-obs = np.zeros((1, 5))
-sens_data = np.zeros((1, 4))
+
+obs = np.zeros((5, 25))
+sens_data = np.zeros((5, 4))
 class Agent(object):
     """
     FOR THE MOUNTAIN_CAR
@@ -195,8 +196,9 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         # get the next states after taking an action
             # env.step(action) returns returned np.array(self.state), reward, done, {}
             #self.state = (position, velocity)
+        #NEED TO KNOW WHAT SHAPE OBS IS. NEEDS TO BE 1,3
         obs, r, done, info = agent.env.step(action)
-        current_pos = np.array(obs)
+        current_pos = np.array(obs[-1][:3])
         #ERROR: current_pos.shape doesnt equal starting_pos.shape
         distance = -goal_distance(current_pos, starting_pos)
         height = sum(env.sim.data.sensordata[:,0])
