@@ -3,17 +3,16 @@
 import sys
 import os
 from pylab import *
-# import seaborn as sns
 import math
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
+import gym
+import passive_hand_env
+from passive_hand_env.passive_hand_env import goal_distance
 #import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 import tensorflow.keras as keras
-
-import gym
 from gym.envs.registration import registry, register, make, spec
 import numpy as np
 #import tensorflow.contrib.layers as layers
@@ -25,6 +24,36 @@ kwargs = {
     'reward_type': 'sparse',
 }
 class Agent(object):
+    """
+    FOR THE MOUNTAIN_CAR
+    Observation: input_size=2
+        Type: Box(2)
+        Num    Observation               Min            Max
+        0      Car Position              -1.2           0.6
+        1      Car Velocity              -0.07          0.07
+    Number of hidden layers: hidden_size = input_size=2
+    
+    Actions: action_size=3
+        Type: Discrete(3)
+        Num    Action
+        0      Accelerate to the Left
+        1      Don't accelerate
+        2      Accelerate to the Right
+        Note: This does not affect the amount of velocity affected by the
+        gravitational pull acting on the car.
+    Learning Rate: lr=0.1
+    Reward:
+         Reward of 0 is awarded if the agent reached the flag (position = 0.5)
+         on top of the mountain.
+         Reward of -1 is awarded if the position of the agent is less than 0.5.
+    Starting State:
+         The position of the car is assigned a uniform random value in
+         [-0.6 , -0.4].
+         The starting velocity of the car is always assigned to 0.
+    Episode Termination:
+         The car position is more than 0.5
+         Episode length is greater than 200
+    """
     def __init__(self, input_size=2, hidden_size=2, gamma=0.95,
                  action_size=3, lr=0.1, dir='tmp/trial/'):
         # call the cartpole simulator from OpenAI gym package
@@ -35,8 +64,6 @@ class Agent(object):
             max_episode_steps=50,
         )
         self.env = gym.make('PassiveHandLift-v0')
-        self.env.reset()
-        cylinder_pos = np.array([1.46177789, 0.74909766, 0])
         # If you wish to save the simulation video, simply uncomment the line below
         # self.env = wrappers.Monitor(self.env, dir, force=True, video_callable=self.video_callable)
 
@@ -138,7 +165,15 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     '''
 
     # reset the environment
-    s = agent.env.reset()
+    """
+    STARTING STATE
+    def reset(self):
+        self.state = np.array([self.np_random.uniform(low=-0.6, high=-0.4), 0])
+        return np.array(self.state)
+        """
+    agent.env.reset()
+    starting_state = np.array([1.46177789, 0.74909766, 0])
+    s = np.array(0, 0)
     for idx in range(len(grad_buffer)):
         grad_buffer[idx] *= 0
     state_history = []
@@ -155,11 +190,17 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         # get the controller output under a given state
         action = agent.next_action(sess, feed_dict, greedy=greedy)
         # get the next states after taking an action
-        snext, r, done, _ = agent.env.step(action)
+            # env.step(action) returns returned np.array(self.state), reward, done, {}
+            #self.state = (position, velocity)
+        observation, r, done, info = agent.env.step(action)
+        obs[i] = observation['observation']
+        current_pos = np.array(obs[-1][:3])
+        distance = -goal_distance(current_pos, starting_state)
+        height = sum(sens_data[:,0])
+        snext = np.array(distance, height)
         if render and i % 50 == 0:
             agent.env.render()
-            
-        #using rew_index = 1. Reward based on KE. Did it in the lowest number of iterations
+        #using rew_index = 3 atm
         r = reward_custom(s, 3)
         current_reward += r
         state_history.append(s)
