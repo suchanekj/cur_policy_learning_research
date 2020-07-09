@@ -23,8 +23,8 @@ os.environ["CUDA_VISIBLE_DEVICES"]=""
 kwargs = {
     'reward_type': 'sparse',
 }
-obs = np.zeros((5, 25))
-sens_data = np.zeros((5, 4))
+obs = np.zeros((1, 5))
+sens_data = np.zeros((1, 4))
 class Agent(object):
     """
     FOR THE MOUNTAIN_CAR
@@ -174,8 +174,9 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         return np.array(self.state)
         """
     agent.env.reset()
-    starting_state = np.array([1.46177789, 0.74909766, 0])
-    s = np.array(np.array([0, 0]))
+    starting_pos = np.array([1.46177789, 0.74909766, 0])
+    starting_state = np.array([0,0])
+    s= np.array(starting_state)
     for idx in range(len(grad_buffer)):
         grad_buffer[idx] *= 0
     state_history = []
@@ -194,11 +195,11 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         # get the next states after taking an action
             # env.step(action) returns returned np.array(self.state), reward, done, {}
             #self.state = (position, velocity)
-        observation, r, done, info = agent.env.step(action)
-        obs[i] = observation['observation']
-        current_pos = np.array(obs[-1][:3])
-        distance = -goal_distance(current_pos, starting_state)
-        height = sum(sens_data[:,0])
+        obs, r, done, info = agent.env.step(action)
+        current_pos = np.array(obs)
+        #ERROR: current_pos.shape doesnt equal starting_pos.shape
+        distance = -goal_distance(current_pos, starting_pos)
+        height = sum(env.sim.data.sensordata[:,0])
         snext = np.array(distance, height)
         if render and i % 50 == 0:
             agent.env.render()
