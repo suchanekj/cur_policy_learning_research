@@ -23,6 +23,8 @@ os.environ["CUDA_VISIBLE_DEVICES"]=""
 kwargs = {
     'reward_type': 'sparse',
 }
+obs = np.zeros((5, 25))
+sens_data = np.zeros((5, 4))
 class Agent(object):
     """
     FOR THE MOUNTAIN_CAR
@@ -173,7 +175,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         """
     agent.env.reset()
     starting_state = np.array([1.46177789, 0.74909766, 0])
-    s = np.array(0, 0)
+    s = np.array(np.array([0, 0]))
     for idx in range(len(grad_buffer)):
         grad_buffer[idx] *= 0
     state_history = []
