@@ -1,5 +1,5 @@
 #this works with tf2.2.0 and python3.8.2 installed
-
+#RL code in main.py from google drive + hand_optimization.py
 import sys
 import os
 from pylab import *
@@ -9,57 +9,27 @@ import matplotlib.animation as animation
 import gym
 import passive_hand_env
 from passive_hand_env.passive_hand_env import goal_distance
-#import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
+#using keras
 import tensorflow.keras as keras
 from gym.envs.registration import registry, register, make, spec
 import numpy as np
-#import tensorflow.contrib.layers as layers
 from gym import wrappers
 from reward_experiment import reward_custom
 
 os.environ["CUDA_VISIBLE_DEVICES"]=""
+
 kwargs = {
     'reward_type': 'sparse',
 }
-
 obs = np.zeros((5, 25))
 sens_data = np.zeros((5, 4))
+
 class Agent(object):
-    """
-    FOR THE MOUNTAIN_CAR
-    Observation: input_size=2
-        Type: Box(2)
-        Num    Observation               Min            Max
-        0      Car Position              -1.2           0.6
-        1      Car Velocity              -0.07          0.07
-    Number of hidden layers: hidden_size = input_size=2
-    
-    Actions: action_size=3
-        Type: Discrete(3)
-        Num    Action
-        0      Accelerate to the Left
-        1      Don't accelerate
-        2      Accelerate to the Right
-        Note: This does not affect the amount of velocity affected by the
-        gravitational pull acting on the car.
-    Learning Rate: lr=0.1
-    Reward:
-         Reward of 0 is awarded if the agent reached the flag (position = 0.5)
-         on top of the mountain.
-         Reward of -1 is awarded if the position of the agent is less than 0.5.
-    Starting State:
-         The position of the car is assigned a uniform random value in
-         [-0.6 , -0.4].
-         The starting velocity of the car is always assigned to 0.
-    Episode Termination:
-         The car position is more than 0.5
-         Episode length is greater than 200
-    """
+    # only modification from original RL code is the kind of simulator called from the OpenAI package
     def __init__(self, input_size=2, hidden_size=2, gamma=0.95,
                  action_size=3, lr=0.1, dir='tmp/trial/'):
-        # call the cartpole simulator from OpenAI gym package
         register(
             id='PassiveHandLift-v0',
             entry_point='passive_hand_env:PassiveHandLift',
@@ -84,15 +54,6 @@ class Agent(object):
         self.reward_pl = tf.placeholder(tf.float32, [None])
 
         # Here we use a single layered neural network as controller, which proved to be sufficient enough.
-        # More complicated ones can be plugged in as well.
-        # hidden_layer = layers.fully_connected(self.input_pl,
-        #                                      hidden_size,
-        #                                      biases_initializer=None,
-        #                                      activation_fn=tf.nn.relu)
-        # hidden_layer = layers.fully_connected(hidden_layer,
-        #                                       hidden_size,
-        #                                       biases_initializer=None,
-        #                                       activation_fn=tf.nn.relu)
         self.output = keras.layers.Dense(action_size,
                                             #input = self.input_pl,
                                              bias_initializer=None,
@@ -154,6 +115,7 @@ def discounted_reward(rewards, gamma):
         ans[i] = running_sum
     return ans
 
+#modified this code from RL code 
 def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render = False):
     '''
     this function does follow things before a trial is done:
@@ -168,14 +130,23 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     '''
 
     # reset the environment
+    
     """
-    STARTING STATE
-    def reset(self):
+    For the mountain car example, the current state, s, used to be = agent.env.reset()
+    agent.env.rest() returned np.array(self.state), where
         self.state = np.array([self.np_random.uniform(low=-0.6, high=-0.4), 0])
-        return np.array(self.state)
+        
+    So the starting state for the mountain car was:
+    position = uniform random value in [-0.6, -0.4]
+    velocity = 0
+    
+    for the hand though, what do we want our starting state to be?
+    for the arm, position in cartesian coordinates rather than intrinsic so we can't just set position = 0
         """
-    agent.env.reset()
+        
+    #starting position stated in hand_optimization.py
     starting_pos = np.array([1.46177789, 0.74909766, 0])
+    # defining our state to be (distance, height) relative to starting position
     starting_state = np.array([0,0])
     s= np.array(starting_state)
     for idx in range(len(grad_buffer)):
@@ -194,18 +165,22 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         # get the controller output under a given state
         action = agent.next_action(sess, feed_dict, greedy=greedy)
         # get the next states after taking an action
-            # env.step(action) returns returned np.array(self.state), reward, done, {}
-            #self.state = (position, velocity)
-        #NEED TO KNOW WHAT SHAPE OBS IS. NEEDS TO BE 1,3
+        
+        '''
+        agent.env.step(action) returns:
+        for the MountainCar: np.array(self.state), reward, done, {}
+        for the Hand: obs, reward, done, info
+        '''
+        
         obs, r, done, info = agent.env.step(action)
+        # working out the state from obs
         current_pos = np.array(obs[-1][:3])
-        #ERROR: current_pos.shape doesnt equal starting_pos.shape
         distance = -goal_distance(current_pos, starting_pos)
         height = sum(env.sim.data.sensordata[:,0])
         snext = np.array(distance, height)
         if render and i % 50 == 0:
             agent.env.render()
-        #using rew_index = 3 atm
+        #using rew_index = 5 instead of 3
         r = reward_custom(s, 5)
         current_reward += r
         state_history.append(s)

@@ -58,8 +58,10 @@ def main():
     print(hof_np[0, 0:5])
 
     current_pos = np.array(obs[-1][:3])
+    print(current_pos.shape)
 
     distance_score = -goal_distance(current_pos, cylinder_pos)
+    print(distance_score)
     h_force_score = -sum(sum(abs(sens_data[:,1:3]))) * 0.05
     v_force_score = -sum(abs(sens_data[:,3]))
     height_score = sum(sens_data[:,0]) * 1000
