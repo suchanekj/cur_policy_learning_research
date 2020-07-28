@@ -143,7 +143,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     for the arm, position in cartesian coordinates rather than intrinsic so we can't just set position = 0
     so I defined the state = (distance, height) of cylinder relative to the starting position
         """
-        
+    agent.env.reset()
     #starting position stated in hand_optimization.py
     starting_pos = np.array([1.46177789, 0.74909766, 0])
     # defining our state to be (distance, height) relative to starting position
