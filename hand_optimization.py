@@ -53,12 +53,10 @@ def main():
             obs[i] = observation['observation']
 
     hof_np = np.array(hof)
-    print(hof_np.shape)
     print(hof_np)
     print(hof_np[0, 0:5])
 
     current_pos = np.array(obs[-1][:3])
-    print(current_pos.shape)
 
     distance_score = -goal_distance(current_pos, cylinder_pos)
     print(distance_score)

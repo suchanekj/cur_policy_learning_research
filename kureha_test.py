@@ -132,7 +132,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     # reset the environment
     
     """
-    For the mountain car example, the current state, s, used to be = agent.env.reset()
+    For the mountain car example, the current state, s = agent.env.reset()
     agent.env.rest() returned np.array(self.state), where
         self.state = np.array([self.np_random.uniform(low=-0.6, high=-0.4), 0])
         
@@ -140,8 +140,8 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     position = uniform random value in [-0.6, -0.4]
     velocity = 0
     
-    for the hand though, what do we want our starting state to be?
     for the arm, position in cartesian coordinates rather than intrinsic so we can't just set position = 0
+    so I defined the state = (distance, height) of cylinder relative to the starting position
         """
         
     #starting position stated in hand_optimization.py
