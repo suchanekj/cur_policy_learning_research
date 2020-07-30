@@ -99,11 +99,9 @@ class PassiveHandEnv(robot_env.RobotEnv):
         grip_pos = self.sim.data.get_site_xpos('robot0:grip')
         dt = self.sim.nsubsteps * self.sim.model.opt.timestep
         grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
-        robot_qpos, robot_qvel = utils.robot_get_obs(self.sim)
+        grip_rot = rotations.mat2euler(self.sim.data.get_site_xmat('robot0:grip'))
         if self.has_object:
             object_pos = self.sim.data.get_site_xpos('object0')
-            # rotations
-            object_rot = rotations.mat2euler(self.sim.data.get_site_xmat('object0'))
             # velocities
             object_velp = self.sim.data.get_site_xvelp('object0') * dt
             object_velr = self.sim.data.get_site_xvelr('object0') * dt
@@ -111,17 +109,15 @@ class PassiveHandEnv(robot_env.RobotEnv):
             object_rel_pos = object_pos - grip_pos
             object_velp -= grip_velp
         else:
-            object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
-        gripper_state = robot_qpos[-2:]
-        gripper_vel = robot_qvel[-2:] * dt  # change to a scalar if the gripper is made symmetric
+            object_pos = object_velp = object_velr = object_rel_pos = np.zeros(0)
 
         if not self.has_object:
             achieved_goal = grip_pos.copy()
         else:
             achieved_goal = np.squeeze(object_pos.copy())
         obs = np.concatenate([
-            grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
-            object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
+            grip_pos, object_pos.ravel(), object_rel_pos.ravel(), grip_rot.ravel(),
+            object_velp.ravel(), object_velr.ravel(), grip_velp,
         ])
 
         return {

@@ -28,7 +28,7 @@ sens_data = np.zeros((5, 4))
 
 class Agent(object):
     # only modification from original RL code is the kind of simulator called from the OpenAI package
-    def __init__(self, input_size=2, hidden_size=2, gamma=0.95,
+    def __init__(self, input_size=13, hidden_size=20, gamma=0.95,
                  action_size=3, lr=0.1, dir='tmp/trial/'):
         register(
             id='PassiveHandLift-v0',
@@ -147,7 +147,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
     #starting position stated in hand_optimization.py
     starting_pos = np.array([1.46177789, 0.74909766, 0])
     # defining our state to be (distance, height) relative to starting position
-    starting_state = np.array([0,0])
+    starting_state = np.array([0]*13)
     s= np.array(starting_state)
     for idx in range(len(grad_buffer)):
         grad_buffer[idx] *= 0
@@ -170,14 +170,27 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         agent.env.step(action) returns:
         for the MountainCar: np.array(self.state), reward, done, {}
         for the Hand: obs, reward, done, info
+        
+        obs['observation']:
+            [0:3] - grip_pos
+            [3:6] - object_pos
+            [6:9] - object_rel_pos
+            [9:12] - grip_rot
+            [12:15] - object_velp
+            [15:18] - object_velr
+            [18:21] - grip_velp
+            
+        obs['achieved_goal']: object position
+        obs['desired_goal']: object goal
         '''
         
         obs, r, done, info = agent.env.step(action)
         # working out the state from obs
-        current_pos = np.array(obs[-1][:3])
-        distance = -goal_distance(current_pos, starting_pos)
-        height = sum(env.sim.data.sensordata[:,0])
-        snext = np.array(distance, height)
+        object_rel_pos = obs['observation'][6:9]
+        grip_rot = obs['observation'][9:12]
+        object_velr = obs['observation'][15:18]
+        sensor_data = agent.env.sim.data.sensordata
+        snext = np.concatenate([object_rel_pos, grip_rot, object_velr, sensor_data])
         if render and i % 50 == 0:
             agent.env.render()
         #using rew_index = 5 instead of 3
