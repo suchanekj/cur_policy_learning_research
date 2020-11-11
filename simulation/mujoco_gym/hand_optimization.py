@@ -1,6 +1,6 @@
 import gym
 import passive_hand_env
-from passive_hand_env.passive_hand_env import goal_distance
+from passive_hand_env.passive_hand import goal_distance
 from gym.envs.registration import registry, register, make, spec
 import random
 import numpy as np
@@ -31,7 +31,7 @@ print(env.action_space.sample())
 cylinder_pos = np.array([1.46177789, 0.74909766, 0])
 pos = np.zeros((5, 5))
 fin_pos = np.zeros((5, 5))
-obs = np.zeros((5, 25))
+obs = np.zeros((5, 21))
 sens_data = np.zeros((5, 4))
 
 N_SUBSTEPS = 3
@@ -74,9 +74,10 @@ def evalPos(individual):
         # each coodinate for postion
     for i in range(5):
         for j in range(N_SUBSTEPS):
-            # env.render()
+            env.render()
             observation, reward, done, infto = env.step(pos[i])
             sens_data[i] = env.sim.data.sensordata
+            print(observation['observation'])
             obs[i] = observation['observation']
 
     current_pos = np.array(obs[-1][:3])

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import gym
 import passive_hand_env
-from passive_hand_env.passive_hand_env import goal_distance
+from passive_hand_env.passive_hand import goal_distance
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
 #using keras

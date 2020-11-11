@@ -1,0 +1,154 @@
+from dm_control.rl import control
+from dm_control import mujoco
+from dm_control.utils import containers
+from . import rotations
+import os
+import numpy as np
+import collections
+from . import base, utils
+from dm_env import specs
+
+_DEFAULT_TIME_LIMIT = 15
+MODEL_XML_PATH = os.path.join('passive_hand', 'lift.xml')
+_N_SUBSTEPS = 20
+
+SUITE = containers.TaggedTasks()
+
+def _load_physics(model_path):
+    if model_path.startswith('/'):
+        fullpath = model_path
+    else:
+        fullpath = os.path.join(os.path.dirname(__file__), 'assets', model_path)
+    if not os.path.exists(fullpath):
+        raise IOError('File {} does not exist'.format(fullpath))
+    return Physics.from_xml_path(fullpath)
+
+@SUITE.add()
+def lift_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
+    physics = _load_physics(MODEL_XML_PATH)
+    task = Lift(sparse=True)
+    environment_kwargs = environment_kwargs or {}
+    return control.Environment(physics, task, time_limit=time_limit, **environment_kwargs, n_sub_steps=_N_SUBSTEPS)
+
+class Physics(base.Physics):
+    def grip_position(self):
+        return self.named.data.site_xpos['robot0:grip']
+
+    def grip_velocity(self):
+        return self.site_xvelp('robot0:grip')
+
+    def grip_rotation(self):
+        return self.named.data.site_xmat['robot0:grip'].reshape((3,3))
+
+    def object_position(self):
+        return self.named.data.site_xpos['object0']
+
+    def object_velocity(self):
+        return self.site_xvelp('object0')
+
+    def object_angular_velocity(self):
+        return self.site_xvelr('object0')
+
+class Lift(control.Task):
+    def __init__(self, sparse, random=None):
+        if not isinstance(random, np.random.RandomState):
+            random = np.random.RandomState(random)
+        self._random = random
+        self._goal = np.asarray([1.46177789, 0.74909766, 0.7])
+        self.gripper_extra_height = 0.2
+        self.reward_type = sparse
+        self.initial_qpos = {
+            'robot0:slide0': 0.405,
+            'robot0:slide1': 0.48,
+            'robot0:slide2': 0.0,
+            'object0:joint': 0.0,
+        }
+
+    def _goal_distance(self, goal_a, goal_b):
+        assert goal_a.shape == goal_b.shape
+        return np.linalg.norm(goal_a - goal_b, axis=-1)
+
+    @property
+    def random(self):
+        """Task-specific `numpy.random.RandomState` instance."""
+        return self._random
+
+    def action_spec(self, physics):
+        """Returns a `BoundedArraySpec` matching the `physics` actuators."""
+        return specs.BoundedArray(shape=(5,), dtype=np.float, minimum=-1., maximum=1.)
+
+    def initialize_episode(self, physics):
+        """Resets elements to their initial position
+        Args:
+          physics: An instance of `mujoco.Physics`.
+        """
+        self._physics_setup(physics,self.initial_qpos)
+        physics.forward()
+
+    def _physics_setup(self, physics, initial_qpos):
+        for name, value in initial_qpos.items():
+            physics.named.data.qpos[name] = value
+        utils.reset_mocap_welds(physics)
+        physics.forward()
+
+        # Move end effector into position.
+        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
+        gripper_rotation = np.array([1., 0., 0., 0.])
+        physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
+        physics.named.data.mocap_quat['robot0:mocap'] = gripper_rotation
+        utils.reset_mocap2body_xpos(physics)
+
+
+    def before_step(self, action, physics):
+        """Sets the control signal for the actuators to values in `action`."""
+        # Support legacy internal code.
+        action = getattr(action, "continuous_actions", action)
+        assert action.shape == (5,)
+        action = action.copy()  # ensure that we don't change the action outside of this scope
+        pos_ctrl, gripper_ctrl = action[:3], action[3]
+
+        # arm origin at [[0.725, 0.74910034]]
+        arm_origin = np.asarray([0.725, 0.74910034])
+        vert_angle = action[3]
+        hor_angle = -np.arctan2(*(physics.data.mocap_pos[0][:2] - arm_origin)) + np.pi / 2
+        twist_angle = action[4]
+
+        rot_ctrl = rotations.quat_mul(rotations.quat_mul(rotations.euler2quat([0., 0., hor_angle]),
+                                                         rotations.euler2quat([0., vert_angle, 0.])),
+                                      rotations.euler2quat([twist_angle, 0., 0.]))
+
+        pos_ctrl *= 0.05  # limit maximum change in position
+        action = np.concatenate([pos_ctrl, rot_ctrl])
+        utils.mocap_set_action(physics, action)
+
+    def after_step(self, physics):
+        pass
+
+    def get_reward(self, physics):
+        d = self._goal_distance(physics.grip_position(), self._goal)
+        if self.reward_type == 'sparse':
+            return -(d > self.distance_threshold).astype(np.float32)
+        else:
+            return -d
+
+    def get_observation(self, physics):
+        grip_pos = physics.grip_position()
+        grip_velp = physics.grip_velocity()
+        grip_rot = rotations.mat2euler(physics.grip_rotation())
+        object_pos = physics.object_position()
+        object_velp = physics.object_velocity()
+        object_velr = physics.object_angular_velocity()
+        object_rel_pos = object_pos - grip_pos;
+        object_velp -= grip_velp;
+
+        obs = collections.OrderedDict()
+
+        obs['grip_pos'] = grip_pos
+        obs['grip_velp'] = grip_velp
+        obs['grip_rot'] = grip_rot.ravel()
+        obs['object_pos'] = object_pos.ravel()
+        obs['object_rel_pos'] = object_rel_pos.ravel()
+        obs['object_velp'] = object_velp.ravel()
+        obs['object_velr'] = object_velr.ravel()
+
+        return obs
