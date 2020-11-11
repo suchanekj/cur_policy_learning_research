@@ -1,6 +1,6 @@
 import gym
-import passive_hand_env
-from passive_hand_env.passive_hand import goal_distance
+import environments
+from passive_hand_env.passive_hand_env import goal_distance
 from gym.envs.registration import registry, register, make, spec
 import random
 import numpy as np

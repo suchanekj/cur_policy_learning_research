@@ -44,11 +44,11 @@ This model has been ported from use in OpenAI Gym to use in dm_control. There ar
 ##Notes
 To load the passive hand model, please use the loader in the passive_hand_env module. Some sample code can be found below:
 ```python
-import passive_hand_env
+import environments
 import numpy as np
 
 # Load task and domain
-env = passive_hand_env.load(domain_name='passive_hand', task_name='lift_sparse')
+env = environments.load(domain_name='passive_hand', task_name='lift_sparse')
 
 # Step through an episode and print out reward, discount and observation.
 action_spec = env.action_spec()
@@ -63,12 +63,12 @@ while not time_step.last():
 ```
 If you would like an interactive viewer, use the following sample code:
 ```python
-import passive_hand_env
+import environments
 import numpy as np
 from dm_control import viewer
 
 # load task and domain
-env = passive_hand_env.load(domain_name='passive_hand', task_name='lift_sparse')
+env = environments.load(domain_name='passive_hand', task_name='lift_sparse')
 
 action_spec = env.action_spec()
 

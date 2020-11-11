@@ -1,7 +1,5 @@
 import gym
-import passive_hand_env
 from gym.envs.registration import registry, register, make, spec
-
 
 
 kwargs = {
