@@ -3,3 +3,8 @@
 *.DS_Store*
 
 ./.idea
+
+# Ignore VSCode Workspace, TensorBoard logs, notebook checkpoints
+*.code-workspace
+*.tfevents.*
+*.ipynb_checkpoints
