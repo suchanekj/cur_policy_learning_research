@@ -6,6 +6,7 @@ env = environments.load(domain_name='passive_hand', task_name='lift_sparse')
 action_spec = env.action_spec()
 
 def random_policy(time_step):
+    print(time_step.observation['grip_pos'])
     return np.random.uniform(action_spec.minimum, action_spec.maximum, size=action_spec.shape)
 
 viewer.launch(env, policy=random_policy)

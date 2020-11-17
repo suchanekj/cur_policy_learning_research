@@ -1,5 +1,5 @@
 from dm_control.rl import control
-from dm_control import mujoco
+from dm_control.mujoco.wrapper import mjbindings
 from dm_control.utils import containers
 from . import rotations
 import os
@@ -13,6 +13,7 @@ MODEL_XML_PATH = os.path.join('passive_hand', 'lift.xml')
 _N_SUBSTEPS = 20
 
 SUITE = containers.TaggedTasks()
+mjlib = mjbindings.mjlib
 
 def _load_physics(model_path):
     if model_path.startswith('/'):
@@ -26,7 +27,7 @@ def _load_physics(model_path):
 @SUITE.add()
 def lift_sparse(time_limit=_DEFAULT_TIME_LIMIT, random=None, environment_kwargs=None):
     physics = _load_physics(MODEL_XML_PATH)
-    task = Lift(sparse=True)
+    task = Lift(sparse=True, random=random)
     environment_kwargs = environment_kwargs or {}
     return control.Environment(physics, task, time_limit=time_limit, **environment_kwargs, n_sub_steps=_N_SUBSTEPS)
 
@@ -93,11 +94,14 @@ class Lift(control.Task):
 
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
+        print('Ideal Start Position: ', gripper_target)
         gripper_rotation = np.array([1., 0., 0., 0.])
         physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
         physics.named.data.mocap_quat['robot0:mocap'] = gripper_rotation
-        utils.reset_mocap2body_xpos(physics)
-
+        for _ in range(50):
+            physics.step()
+        # mjlib.mj_inverse(physics.model.ptr, physics.data.ptr)
+        # print(physics.data.qfrc_inverse)
 
     def before_step(self, action, physics):
         """Sets the control signal for the actuators to values in `action`."""
@@ -114,8 +118,8 @@ class Lift(control.Task):
         twist_angle = action[4]
 
         rot_ctrl = rotations.quat_mul(rotations.quat_mul(rotations.euler2quat([0., 0., hor_angle]),
-                                                         rotations.euler2quat([0., vert_angle, 0.])),
-                                      rotations.euler2quat([twist_angle, 0., 0.]))
+                                        rotations.euler2quat([0., vert_angle, 0.])),
+                                        rotations.euler2quat([twist_angle, 0., 0.]))
 
         pos_ctrl *= 0.05  # limit maximum change in position
         action = np.concatenate([pos_ctrl, rot_ctrl])
@@ -132,14 +136,16 @@ class Lift(control.Task):
             return -d
 
     def get_observation(self, physics):
+        #convert from velocity in simulation steps to m/s
+        dt = physics.data.time
         grip_pos = physics.grip_position()
-        grip_velp = physics.grip_velocity()
-        grip_rot = rotations.mat2euler(physics.grip_rotation())
+        grip_velp = physics.grip_velocity() * dt
+        grip_rot = rotations.mat2euler(physics.grip_rotation()) * dt
         object_pos = physics.object_position()
-        object_velp = physics.object_velocity()
-        object_velr = physics.object_angular_velocity()
-        object_rel_pos = object_pos - grip_pos;
-        object_velp -= grip_velp;
+        object_velp = physics.object_velocity() * dt
+        object_velr = physics.object_angular_velocity() * dt
+        object_rel_pos = object_pos - grip_pos
+        object_velp -= grip_velp
 
         obs = collections.OrderedDict()
 
