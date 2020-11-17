@@ -1,6 +1,7 @@
 import numpy as np
+from dm_control.mujoco.wrapper import mjbindings
 
-EQ_WELD = 1
+EQ_WELD = mjbindings.enums.mjtEq.mjEQ_WELD
 
 def mocap_set_action(physics, action):
     """Sets action through a delta in rotation and position of mocap

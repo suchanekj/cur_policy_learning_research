@@ -4,25 +4,11 @@ from dm_control.mujoco.wrapper import mjbindings
 import numpy as np
 
 mjlib = mjbindings.mjlib
+mjtObj = mjbindings.enums.mjtObj
 
 class Physics(mujoco.Physics):
-    def site_jacp(self, site_name):
-        site_id = self.model.name2id(site_name, 'site')
-        jacp = np.zeros(3 * self.model.nv)
-        mjlib.mj_jacSite(self.model.ptr, self.data.ptr, jacp, None, site_id)
-        return jacp
-
-    def site_jacr(self, site_name):
-        site_id = self.model.name2id(site_name, 'site')
-        jacr = np.zeros(3 * self.model.nv)
-        mjlib.mj_jacSite(self.model.ptr, self.data.ptr, None, jacr, site_id)
-        return jacr
-
-    def site_xvelp(self, site_name):
-        jacp = self.site_jacp(site_name).reshape((3, self.model.nv))
-        return np.dot(jacp, self.data.qvel)
-
-    def site_xvelr(self, site_name):
-        jacr = self.site_jacr(site_name).reshape((3, self.model.nv))
-        return np.dot(jacr, self.data.qvel)
-
+    def get_site_vel(self, site_name, is_local):
+        #6DOF Vector with first 3 as velr and second 3 as velp
+        vels = np.zeros(6)
+        mjlib.mj_objectVelocity(self.model.ptr, self.data.ptr, mjtObj.mjOBJ_SITE, self.model.name2id(site_name, 'site'), vels, int(is_local))
+        return vels

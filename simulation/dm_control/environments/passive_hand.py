@@ -1,5 +1,5 @@
 from dm_control.rl import control
-from dm_control.mujoco.wrapper import mjbindings
+# from dm_control.mujoco.wrapper import mjbindings
 from dm_control.utils import containers
 from . import rotations
 import os
@@ -13,7 +13,7 @@ MODEL_XML_PATH = os.path.join('passive_hand', 'lift.xml')
 _N_SUBSTEPS = 20
 
 SUITE = containers.TaggedTasks()
-mjlib = mjbindings.mjlib
+# mjlib = mjbindings.mjlib
 
 def _load_physics(model_path):
     if model_path.startswith('/'):
@@ -36,7 +36,7 @@ class Physics(base.Physics):
         return self.named.data.site_xpos['robot0:grip']
 
     def grip_velocity(self):
-        return self.site_xvelp('robot0:grip')
+        return self.get_site_vel('robot0:grip', False)[3:]
 
     def grip_rotation(self):
         return self.named.data.site_xmat['robot0:grip'].reshape((3,3))
@@ -45,10 +45,10 @@ class Physics(base.Physics):
         return self.named.data.site_xpos['object0']
 
     def object_velocity(self):
-        return self.site_xvelp('object0')
+        return self.get_site_vel('object0', False)[3:]
 
     def object_angular_velocity(self):
-        return self.site_xvelr('object0')
+        return self.get_site_vel('object0', False)[:3]
 
 class Lift(control.Task):
     def __init__(self, sparse, random=None):
@@ -136,25 +136,29 @@ class Lift(control.Task):
             return -d
 
     def get_observation(self, physics):
-        #convert from velocity in simulation steps to m/s
-        dt = physics.data.time
         grip_pos = physics.grip_position()
-        grip_velp = physics.grip_velocity() * dt
-        grip_rot = rotations.mat2euler(physics.grip_rotation()) * dt
+        grip_vel = physics.get_site_vel('robot0:grip', False)
+        grip_velp = grip_vel[3:]
+        grip_velr = grip_vel[:3]
+        grip_rot = rotations.mat2euler(physics.grip_rotation())
+
         object_pos = physics.object_position()
-        object_velp = physics.object_velocity() * dt
-        object_velr = physics.object_angular_velocity() * dt
+        object_vel = physics.get_site_vel('object0', False)
+        object_velp = object_vel[3:]
+        object_velr = object_vel[:3]
         object_rel_pos = object_pos - grip_pos
-        object_velp -= grip_velp
+        object_rel_velp = object_velp - grip_velp
 
         obs = collections.OrderedDict()
 
         obs['grip_pos'] = grip_pos
         obs['grip_velp'] = grip_velp
-        obs['grip_rot'] = grip_rot.ravel()
-        obs['object_pos'] = object_pos.ravel()
-        obs['object_rel_pos'] = object_rel_pos.ravel()
-        obs['object_velp'] = object_velp.ravel()
-        obs['object_velr'] = object_velr.ravel()
+        obs['grip_velr'] = grip_velr
+        obs['grip_rot'] = grip_rot
+        obs['object_pos'] = object_pos
+        obs['object_rel_pos'] = object_rel_pos
+        obs['object_velp'] = object_velp
+        obs['object_velr'] = object_velr
+        obs['object_rel_velp'] = object_rel_velp
 
         return obs

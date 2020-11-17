@@ -14,23 +14,15 @@ These robotics environments were provided by OpenAI in the following paper:
 In addition, this code was largely based off of the DeepMind Control Suite developed by DeepMind as detailed in the following paper:
 
 ```
-@ARTICLE{2018arXiv180100690T,
-       author = {{Tassa}, Yuval and {Doron}, Yotam and {Muldal}, Alistair and
-         {Erez}, Tom and {Li}, Yazhe and {de Las Casas}, Diego and
-         {Budden}, David and {Abdolmaleki}, Abbas and {Merel}, Josh and
-         {Lefrancq}, Andrew and {Lillicrap}, Timothy and {Riedmiller}, Martin},
-        title = "{DeepMind Control Suite}",
-      journal = {arXiv e-prints},
-     keywords = {Computer Science - Artificial Intelligence},
-         year = 2018,
-        month = jan,
-          eid = {arXiv:1801.00690},
-        pages = {arXiv:1801.00690},
-archivePrefix = {arXiv},
-       eprint = {1801.00690},
- primaryClass = {cs.AI},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2018arXiv180100690T},
-      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@misc{tassa2020dmcontrol,
+    title={dm_control: Software and Tasks for Continuous Control},
+    author={Yuval Tassa and Saran Tunyasuvunakool and Alistair Muldal and
+            Yotam Doron and Siqi Liu and Steven Bohez and Josh Merel and
+            Tom Erez and Timothy Lillicrap and Nicolas Heess},
+    year={2020},
+    eprint={2006.12983},
+    archivePrefix={arXiv},
+    primaryClass={cs.RO}
 }
 ```
 
