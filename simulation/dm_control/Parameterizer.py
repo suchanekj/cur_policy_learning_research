@@ -20,6 +20,8 @@ class Parameterizer:
 
         self.lift_root = self.lift_tree.getroot()
         self.robot_root = self.robot_tree.getroot()
+    # def num_to_str(self, *args):
+    #     return ' '.join(args)
 
     def _translate(self, pos: str, dx, dy, dz) -> str:
         """takes a position string, translates it by dxyz, and returns it"""
@@ -31,7 +33,7 @@ class Parameterizer:
         xyz = ' '.join(xyz)
         return xyz
 
-    def modify_object(self, dx, dy, dz):
+    def object_translate(self, dx, dy, dz):
         """modifies lift_root by shifting the object position by xyz"""
 
         # needs to be updated once dhilan adds in his objects
@@ -40,8 +42,30 @@ class Parameterizer:
         pos = object.attrib['pos']
         object.attrib['pos'] = self._translate(pos, dx, dy, dz)
 
-    # def modify_fingers(self, dx, dy=0, dz=0):
+    def object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012):
+        """
+        Creates an object whose radius varies from bottom to top.
 
+        r -- middle radius
+        rbtm -- bottom radius
+        h -- height of objecct
+        t -- thickness of each slice
+        """
+        n = int(h / t)
+        dr = 2 * (rbtm - r) / n
+
+        object = self.lift_root[4][4]
+
+        for i in range(n):
+            z2 = i * t - h/2
+            r2 = rbtm - i * dr
+            cylinder = ET.Element('geom')
+            nxtpos = ' '.join(('0', '0', str(z2)))
+            nxtsz = ' '.join((str(r2), str(t / 2)))
+            cylinder.attrib = dict(name='object0' + str(i), pos=nxtpos, size=nxtsz, type='cylinder', condim='3',
+                               material='block_mat', mass='0')
+            object.append(cylinder)
+            self.printer(cylinder)
 
     def debug(self):
         self.printer(self.lift_root[1])
@@ -58,6 +82,6 @@ class Parameterizer:
 
 
 pm = Parameterizer()
-# pm.modify_object(1, 1, 1)
+pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
+# pm.translate_object(1, 1, 1)
 pm.export_XML()
-# pm = Parameterizer()

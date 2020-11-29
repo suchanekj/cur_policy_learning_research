@@ -26,7 +26,8 @@
 <!--		[1.36177789 0.74909766 0.55461739]-->
 		<body name="object0" pos="1.46177789 0.74909766 0.60">
 			<joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0"></joint>
-			<geom size="0.025 0.060" type="cylinder" condim="3" name="object0" material="block_mat" mass="2"></geom>
+			<geom size="0.005 0.060" type="cylinder" condim="3" name="object0" material="block_mat" mass="2"></geom>
+<!--			<geom size="0.025 0.060" type="cylinder" condim="3" name="object0" material="block_mat" mass="2"></geom>-->
 			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
 		</body>
 
