@@ -4,6 +4,7 @@ import copy
 import numpy as np
 import xml.etree.ElementTree as ET
 
+#hello world!
 
 class Parameterizer:
     unmodified_lift = os.getcwd() + "/environments/assets/passive_hand_unmodified/lift.xml"
