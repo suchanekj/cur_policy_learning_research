@@ -4,8 +4,6 @@ import copy
 import numpy as np
 import xml.etree.ElementTree as ET
 
-#hello world!
-
 class Parameterizer:
     unmodified_lift = os.getcwd() + "/environments/assets/passive_hand_unmodified/lift.xml"
     unmodified_robot = os.getcwd() + "/environments/assets/passive_hand_unmodified/robot.xml"
@@ -67,6 +65,17 @@ class Parameterizer:
                                material='block_mat', mass='0')
             object.append(cylinder)
             self.printer(cylinder)
+
+def robot_change_equilibrium_pos(self, a, b, c):
+        """
+        Changes the eq. pos
+        a,b,c -- 
+        """
+        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+        joints = [i for i in palm.iter('joint')]
+        for j in joints:
+            j.attrib['springref'] = str(a)
+
 
     def robot_change_joint_stiffness(self, v):
         """
