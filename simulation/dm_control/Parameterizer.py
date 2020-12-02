@@ -78,6 +78,25 @@ class Parameterizer:
         for i in joints:
             i.attrib['stiffness'] = str(v)
 
+    def robot_change_spring_default(self, a, b):
+        """
+        Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
+        All are in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
+        a -- thumb
+        b -- others
+        """
+        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+        joints = [i for i in palm.iter('joint')]
+        for i in joints:
+            # print(i.attrib['name'])
+            if("TH" in i.attrib['name']):
+                if(i.attrib['name'] == "robot0:THJ0"):
+                    i.attrib['springref'] = str(-a)
+                elif(i.attrib['name'] == "robot0:THJ3"):
+                    i.attrib['springref'] = str(a)
+            elif not ("J3" in i.attrib['name'] or "J4" in i.attrib['name']):
+                i.attrib['springref'] = str(b)
+
     def robot_change_friction(self, a, b, c):
         """
         Changes the friction in robot's fingertips
@@ -106,7 +125,8 @@ class Parameterizer:
 
 
 pm = Parameterizer()
-pm.robot_change_joint_stiffness(5)
+pm.robot_change_spring_default(1, 1)
+# pm.robot_change_joint_stiffness(5)
 # pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
 # pm.translate_object(1, 1, 1)
 pm.export_XML()
