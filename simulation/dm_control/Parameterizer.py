@@ -67,6 +67,19 @@ class Parameterizer:
             object.append(cylinder)
             self.printer(cylinder)
 
+    def robot_change_friction(self, a, b, c):
+        """
+        Changes the friction in robot's fingertips
+        a -- translational friction
+        b -- rotational friction
+        c -- rolling friction
+        """
+        for site in ['th','ff','mf','rf','lf']:
+            body = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:'+site+'distal'][0]
+            tip = [i for i in body.iter('geom') if i.get('name')=='robot0:C_'+site+'distal'][0]
+            f = ' '.join(map(str, [a,b,c]))
+            tip.set('friction',f)
+
     def debug(self):
         self.printer(self.lift_root[1])
 
@@ -82,6 +95,7 @@ class Parameterizer:
 
 
 pm = Parameterizer()
-pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
+pm.robot_change_friction(0,0,0)
+# pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
 # pm.translate_object(1, 1, 1)
 pm.export_XML()
