@@ -67,6 +67,16 @@ class Parameterizer:
             object.append(cylinder)
             self.printer(cylinder)
 
+    def robot_change_joint_stiffness(self, v):
+        """
+        Changes the joint stiffness
+        v -- stiffness value
+        """
+        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+        joints = [i for i in palm.iter('joint')]
+        for i in joints:
+            i.attrib['stiffness'] = str(v)
+
     def robot_change_friction(self, a, b, c):
         """
         Changes the friction in robot's fingertips
@@ -95,7 +105,7 @@ class Parameterizer:
 
 
 pm = Parameterizer()
-pm.robot_change_friction(0,0,0)
+pm.robot_change_joint_stiffness(5)
 # pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
 # pm.translate_object(1, 1, 1)
 pm.export_XML()
