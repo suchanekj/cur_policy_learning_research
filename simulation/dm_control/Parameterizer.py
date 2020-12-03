@@ -5,11 +5,12 @@ import numpy as np
 import xml.etree.ElementTree as ET
 
 class Parameterizer:
-    unmodified_lift = os.getcwd() + "/environments/assets/passive_hand_unmodified/lift.xml"
-    unmodified_robot = os.getcwd() + "/environments/assets/passive_hand_unmodified/robot.xml"
-
-    modified_lift = os.getcwd() + "/environments/assets/passive_hand/lift.xml"
-    modified_robot = os.getcwd() + "/environments/assets/passive_hand/robot.xml"
+    xml_folder = os.path.join(os.path.dirname(__file__), 'environments', 'assets')
+    unmodified_lift = os.path.join(xml_folder, 'passive_hand_unmodified', 'lift.xml')
+    unmodified_robot = os.path.join(xml_folder, 'passive_hand_unmodified', 'robot.xml')
+    
+    modified_lift = os.path.join(xml_folder, 'passive_hand', 'lift.xml')
+    modified_robot = os.path.join(xml_folder, 'passive_hand', 'robot.xml')
 
     def __init__(self):
         """Initialises an xml tree for lift.xml and robot.xml"""
@@ -66,17 +67,6 @@ class Parameterizer:
             object.append(cylinder)
             self.printer(cylinder)
 
-def robot_change_equilibrium_pos(self, a, b, c):
-        """
-        Changes the eq. pos
-        a,b,c -- 
-        """
-        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
-        joints = [i for i in palm.iter('joint')]
-        for j in joints:
-            j.attrib['springref'] = str(a)
-
-
     def robot_change_joint_stiffness(self, v):
         """
         Changes the joint stiffness
@@ -87,24 +77,52 @@ def robot_change_equilibrium_pos(self, a, b, c):
         for i in joints:
             i.attrib['stiffness'] = str(v)
 
-    def robot_change_spring_default(self, a, b):
-        """
-        Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
-        All are in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
-        a -- thumb
-        b -- others
-        """
-        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
-        joints = [i for i in palm.iter('joint')]
-        for i in joints:
-            # print(i.attrib['name'])
-            if("TH" in i.attrib['name']):
-                if(i.attrib['name'] == "robot0:THJ0"):
-                    i.attrib['springref'] = str(-a)
-                elif(i.attrib['name'] == "robot0:THJ3"):
+    # def robot_change_spring_default(self, a, b):
+    #     """
+    #     Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
+    #     All are in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
+    #     a -- thumb
+    #     b -- others
+    #     """
+    #     palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+    #     joints = [i for i in palm.iter('joint')]
+    #     for i in joints:
+    #         # print(i.attrib['name'])
+    #         if("TH" in i.attrib['name']):
+    #             if(i.attrib['name'] == "robot0:THJ0"):
+    #                 i.attrib['springref'] = str(-a)
+    #             elif(i.attrib['name'] == "robot0:THJ3"):
+    #                 i.attrib['springref'] = str(a)
+    #         elif not ("J3" in i.attrib['name'] or "J4" in i.attrib['name']):
+    #             i.attrib['springref'] = str(b)
+
+    def robot_change_finger_spring_default(self, a):
+            """
+            Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
+            a is in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
+            a -- default position
+            """
+            palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+            for i in palm.iter('joint'):
+                if not any(_ in i.attrib['name'] for _ in ["J4","J3","TH"]):
                     i.attrib['springref'] = str(a)
-            elif not ("J3" in i.attrib['name'] or "J4" in i.attrib['name']):
-                i.attrib['springref'] = str(b)
+                    
+    def robot_change_thumb_spring_default(self, a, b, c):
+            """
+            Changes default thumb position by changing the default lengths for the thumb joints.
+
+            a -- thumb base rotation outside of the palm plane(gripping), range [-1.047, 1.047], where 1.047 is for fully gripped
+            b -- thumb base rotation in the palm plane, range [0, 1.6], where 0 is when thumb is closest to the index finger(adduction)
+            c -- distal knuckle bending, range [-1.571, 0], where -1.571 is for fully bent
+            """
+            thbase = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:thbase'][0]
+            for i in thbase.iter('joint'):
+                if(i.attrib['name'] == "robot0:THJ4"):
+                    i.attrib['springref'] = str(a)
+                elif(i.attrib['name'] == "robot0:THJ3"):
+                    i.attrib['springref'] = str(b)
+                elif(i.attrib['name'] == "robot0:THJ0"):
+                    i.attrib['springref'] = str(c)
 
     def robot_change_friction(self, a, b, c):
         """
@@ -134,7 +152,9 @@ def robot_change_equilibrium_pos(self, a, b, c):
 
 
 pm = Parameterizer()
-pm.robot_change_spring_default(1, 1)
+# pm.robot_change_spring_default(1, 1)
+pm.robot_change_finger_spring_default(0)
+pm.robot_change_thumb_spring_default(1, 1.6, 0)
 # pm.robot_change_joint_stiffness(5)
 # pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
 # pm.translate_object(1, 1, 1)
