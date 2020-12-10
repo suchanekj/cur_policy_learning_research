@@ -74,7 +74,7 @@ def evalPos(individual):
         # each coodinate for postion
     for i in range(5):
         for j in range(N_SUBSTEPS):
-            env.render()
+            # env.render()
             observation, reward, done, infto = env.step(pos[i])
             sens_data[i] = env.sim.data.sensordata
             print(observation['observation'])
