@@ -23,12 +23,12 @@
 		</body>
 
 
-		<body name="object0" pos="1.46177789 0.74909766 0.60">
+		<body name="object0" pos="1.461560612054975 0.749865573272034 0.6">
 			<joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0" />
 			<geom size="0.005 0.060" type="cylinder" condim="3" name="object0" material="block_mat" mass="2" />
 
 			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere" />
-		</body>
+		<geom name="object00" pos="0 0 -0.06" size="0.013003666939969682 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object01" pos="0 0 -0.048" size="0.015402933551975747 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object02" pos="0 0 -0.036" size="0.01780220016398181 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object03" pos="0 0 -0.023999999999999994" size="0.020201466775987872 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object04" pos="0 0 -0.011999999999999997" size="0.022600733387993937 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object05" pos="0 0 0.0" size="0.025 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object06" pos="0 0 0.01200000000000001" size="0.027399266612006062 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object07" pos="0 0 0.024000000000000007" size="0.029798533224012127 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object08" pos="0 0 0.036000000000000004" size="0.03219779983601819 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object09" pos="0 0 0.048" size="0.03459706644802425 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /></body>
 
 		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0" />
 	</worldbody>

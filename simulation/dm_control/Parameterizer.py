@@ -1,3 +1,4 @@
+import random
 import shutil, os
 import copy
 import inspect
@@ -12,22 +13,35 @@ class Parameterizer:
     modified_lift = os.path.join(xml_folder, 'passive_hand', 'lift.xml')
     modified_robot = os.path.join(xml_folder, 'passive_hand', 'robot.xml')
 
-    def randomize(self, i):
+    def randomize_all(self, v):
         """
         Randomizes the model parameters. Returns a tuple of all the randomized parameters.
-        Upper bound: ~20% difference from original values (modify if necessary!)
 
-        i -- input range: [0, 1], i.e. 0 to 1 --> 0% change to 20% change
+        Domain(i) = [0..1]
+
+        I tried to make it such that we randomise by a fraction of the original value, so
+        when i = 1 we could scale friction by up to twice its original value or down to 0.
+
+        However there are some things that are hard-coded, such as how much to vary the object
+        position.
+
+        Probably a good idea to not exceed some arbitrary value like 0.2...
         """
-        if(i < 0 or i > 1): return None
-        sig = inspect.signature(self.object_translate)
-        print(sig.parameters.items())
-        # object_translate(self, dx, dy, dz)
-        # object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012)
-        # robot_change_joint_stiffness(self, v)
-        # robot_change_finger_spring_default(self, a)
-        # robot_change_thumb_spring_default(self, a, b, c)
-        # robot_change_friction(self, a, b, c)
+        if(v < 0 or v > 1): raise Exception("Randomisation should be within the range [0..1] :(")
+
+        func_arr = [
+            self.object_translate,
+            self.object_change_slope,
+            self.robot_change_finger_length,
+            self.robot_change_joint_stiffness,
+            self.robot_change_finger_spring_default,
+            self.robot_change_thumb_spring_default,
+            self.robot_change_friction
+        ]
+        random_arr = [random.random() * v for _ in range(len(func_arr))]
+        for a, b in zip(random_arr, func_arr):
+            b(a)
+        return random_arr
 
 
     def __init__(self):
@@ -49,24 +63,40 @@ class Parameterizer:
         xyz = ' '.join(xyz)
         return xyz
 
-    def object_translate(self, dx=0, dy=0, dz=0):
-        """modifies lift_root by shifting the object position by xyz"""
-
+    def object_translate(self, v):
+        """
+        Shifts the object randomly about its origin by a random distance within
+        v * object radius
+        """
+        dx=0.025 * v * self.random11()
+        dy=0.025 * v * self.random11()
+        dz=0
         # needs to be updated once dhilan adds in his objects
 
         object = self.lift_root[4][4]
         pos = object.attrib['pos']
         object.attrib['pos'] = self._translate(pos, dx, dy, dz)
 
-    def object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012):
+    # def object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012):
+    def object_change_slope(self, v):
+
         """
+        v -- Range: [0..1]
+
         Creates an object whose radius varies from bottom to top.
+        For now, the default value is halfway between a cylinder and an upside-down cone,
+        and randomising creates an object that could be closer to a cylinder or cone
 
         r -- middle radius
         rbtm -- bottom radius
         h -- height of objecct
         t -- thickness of each slice
         """
+
+        r=0.025
+        rbtm=0.013 + self.random11() * v * 0.012
+        h=0.120
+        t=0.012
         n = int(h / t)
         dr = 2 * (rbtm - r) / n
 
@@ -82,12 +112,16 @@ class Parameterizer:
                                material='block_mat', mass='0')
             object.append(cylinder)
 
-    def robot_change_finger_length(self, v=0):
+    def robot_change_finger_length(self, v):
         """
-        Increases current finger lengths by v,
-        i.e.: l_new = l + v
-        Empirically v should be in [0, 0.02]
+        Randomly changes the finger length by up to v * 0.02
+
+        I had to make the default extension 0.01, so that we can vary the finger length about
+        0.01, with range = [0, 0.02]
+
+        0.02 is hardcoded, it makes the fingers looong
         """
+        extra_length = 0.01 * (1 + v * self.random11())
         finger_segment_list = []
         for element in self.robot_root.iter('body'):
             for finger_part in ["proximal", "middle", "distal"]:
@@ -95,72 +129,68 @@ class Parameterizer:
                     finger_segment_list.append(element)
 
         for finger_segment in finger_segment_list:
-            finger_segment.attrib['pos'] = self._translate(finger_segment.attrib['pos'], 0, 0, v)
+            finger_segment.attrib['pos'] = self._translate(finger_segment.attrib['pos'], 0, 0, extra_length)
 
-    def robot_change_joint_stiffness(self, v=80.0):
+    def robot_change_joint_stiffness(self, v):
         """
-        Changes the joint stiffness
-        v -- stiffness value
+        Changes the stiffness value randomly by up to v of the original value
         """
+        stiffness = 80.0 * (1 + v * self.random11())
         palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
         joints = [i for i in palm.iter('joint')]
         for i in joints:
-            i.attrib['stiffness'] = str(v)
+            i.attrib['stiffness'] = str(stiffness)
 
-    # def robot_change_spring_default(self, a, b):
-    #     """
-    #     Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
-    #     All are in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
-    #     a -- thumb
-    #     b -- others
-    #     """
-    #     palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
-    #     joints = [i for i in palm.iter('joint')]
-    #     for i in joints:
-    #         # print(i.attrib['name'])
-    #         if("TH" in i.attrib['name']):
-    #             if(i.attrib['name'] == "robot0:THJ0"):
-    #                 i.attrib['springref'] = str(-a)
-    #             elif(i.attrib['name'] == "robot0:THJ3"):
-    #                 i.attrib['springref'] = str(a)
-    #         elif not ("J3" in i.attrib['name'] or "J4" in i.attrib['name']):
-    #             i.attrib['springref'] = str(b)
-
-    def robot_change_finger_spring_default(self, a=0.2):
-            """
-            Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
-            a is in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
-            a -- default position for all three fingers (original: 0.2)
-            """
-            palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
-            for i in palm.iter('joint'):
-                if not any(_ in i.attrib['name'] for _ in ["J4","J3","TH"]):
-                    i.attrib['springref'] = str(a)
-                    
-    def robot_change_thumb_spring_default(self, a=0.1, b=1.6, c=-0.8):
-            """
-            Changes default thumb position by changing the default lengths for the thumb joints.
-
-            a -- thumb base rotation outside of the palm plane(gripping), range [-1.047, 1.047], where 1.047 is for fully gripped
-            b -- thumb base rotation in the palm plane, range [0, 1.6], where 0 is when thumb is closest to the index finger(adduction)
-            c -- distal knuckle bending, range [-1.571, 0], where -1.571 is for fully bent
-            """
-            thbase = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:thbase'][0]
-            for i in thbase.iter('joint'):
-                if(i.attrib['name'] == "robot0:THJ4"):
-                    i.attrib['springref'] = str(a)
-                elif(i.attrib['name'] == "robot0:THJ3"):
-                    i.attrib['springref'] = str(b)
-                elif(i.attrib['name'] == "robot0:THJ0"):
-                    i.attrib['springref'] = str(c)
-
-    def robot_change_friction(self, a=1, b=0.005, c=0.0001):
+    def robot_change_finger_spring_default(self, v):
         """
+        Changes default spring value randomly by up to v of the original value
+
+        Changes default finger position by changing the default lengths for the springs in the proximal, middle and distal finger joints.
+        a is in the range [0, 1.571], where 0 is for fully extended and 1.571 is for fully bent.
+        a -- default position for all three fingers (original: 0.8)
+        """
+        a = 0.8 * (1 + v * self.random11())
+        palm = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:palm'][0]
+        for i in palm.iter('joint'):
+            if not any(_ in i.attrib['name'] for _ in ["J4","J3","TH"]):
+                i.attrib['springref'] = str(a)
+                    
+    def robot_change_thumb_spring_default(self, v):
+        """
+        Changes default spring value randomly by up to v of the original value
+
+        Changes default thumb position by changing the default lengths for the thumb joints.
+
+        a -- thumb base rotation outside of the palm plane(gripping), range [-1.047, 1.047], where 1.047 is for fully gripped
+        b -- thumb base rotation in the palm plane, range [0, 1.6], where 0 is when thumb is closest to the index finger(adduction)
+        c -- distal knuckle bending, range [-1.571, 0], where -1.571 is for fully bent
+        """
+        a = 0.1 * (1 + v * self.random01())
+        b = 1.6 * (1 + v * self.random01())
+        c = -0.8 * (1 + v * self.random01())
+        thbase = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:thbase'][0]
+        for i in thbase.iter('joint'):
+            if(i.attrib['name'] == "robot0:THJ4"):
+                i.attrib['springref'] = str(a)
+            elif(i.attrib['name'] == "robot0:THJ3"):
+                i.attrib['springref'] = str(b)
+            elif(i.attrib['name'] == "robot0:THJ0"):
+                i.attrib['springref'] = str(c)
+
+    def robot_change_friction(self, v):
+        """
+        Changes default friction value randomly by up to v of the original value
+
+
         Changes the friction in robot's fingertips
         a -- translational friction
         b -- rotational friction
         c -- rolling friction
         """
+        a = 1 * (1 + v * self.random11())
+        b = 0.005 * (1 + v * self.random11())
+        c = 0.0001 * (1 + v * self.random11())
+
         for site in ['th','ff','mf','rf','lf']:
             body = [i for i in self.robot_root.iter('body') if i.get('name')=='robot0:'+site+'distal'][0]
             tip = [i for i in body.iter('geom') if i.get('name')=='robot0:C_'+site+'distal'][0]
@@ -177,18 +207,17 @@ class Parameterizer:
             print(child.tag, child.attrib)
         print()
 
+    def random11(self):
+        return 2 * random.random() - 1
+
+    def random01(self):
+        return random.random()
+
     def export_XML(self):
         self.lift_tree.write(Parameterizer.modified_lift)
         self.robot_tree.write(Parameterizer.modified_robot)
 
-
+# Example code:
 pm = Parameterizer()
-pm.randomize(4)
-# pm.robot_change_finger_length(0.02)
-# pm.robot_change_spring_default(1, 1)
-# pm.robot_change_finger_spring_default(1.571)
-# pm.robot_change_thumb_spring_default(1, 1.6, 0)
-# pm.robot_change_joint_stiffness(5)
-# pm.object_change_slope(0.025, 0.04, 0.12, 0.001)
-# pm.translate_object(1, 1, 1)
+pm.randomize_all(0.2)
 pm.export_XML()
