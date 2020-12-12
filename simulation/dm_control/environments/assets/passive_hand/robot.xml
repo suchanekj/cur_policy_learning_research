@@ -95,17 +95,17 @@
 													<geom class="robot0:D_Vizual" name="robot0:V_ffknuckle" mesh="robot0:knuckle" />
 													<body name="robot0:ffproximal" pos="0 0 0">
 														<inertial pos="0 0 0.023" quat="0.707 -0.004 0.004 0.707" mass="0.014" diaginertia="1e-05 1e-05 1e-05" />
-														<joint name="robot0:FFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1102" />
+														<joint name="robot0:FFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="0.2" user="1102" />
 														<geom class="robot0:D_Vizual" name="robot0:V_ffproximal" mesh="robot0:F3" />
 														<geom class="robot0:DC_Hand" name="robot0:C_ffproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />
 														<body name="robot0:ffmiddle" pos="0 0 0.045">
 															<inertial pos="0 0 0.011" quat="0.707 0 0 0.707" mass="0.012" diaginertia="1e-05 1e-05 1e-05" />
-															<joint name="robot0:FFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1101" />
+															<joint name="robot0:FFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1101" />
 															<geom class="robot0:D_Vizual" name="robot0:V_ffmiddle" mesh="robot0:F2" />
 															<geom class="robot0:DC_Hand" name="robot0:C_ffmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />
 															<body name="robot0:ffdistal" pos="0 0 0.025">
 																<inertial pos="0 0 0.015" quat="0.707 -0.003 0.003 0.707" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
-																<joint name="robot0:FFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1100" />
+																<joint name="robot0:FFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1100" />
 																<geom class="robot0:D_Vizual" name="robot0:V_ffdistal" pos="0 0 0.001" mesh="robot0:F1" />
 																<geom class="robot0:DC_Hand" name="robot0:C_ffdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />
 																<site name="robot0:S_fftip" pos="0 0 0.026" group="3" />
@@ -120,17 +120,17 @@
 													<geom class="robot0:D_Vizual" name="robot0:V_mfknuckle" mesh="robot0:knuckle" />
 													<body name="robot0:mfproximal" pos="0 0 0">
 														<inertial pos="0 0 0.023" quat="0.707 -0.004 0.004 0.707" mass="0.014" diaginertia="1e-05 1e-05 1e-05" />
-														<joint name="robot0:MFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1106" />
+														<joint name="robot0:MFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="0.2" user="1106" />
 														<geom class="robot0:D_Vizual" name="robot0:V_mfproximal" mesh="robot0:F3" />
 														<geom class="robot0:DC_Hand" name="robot0:C_mfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />
 														<body name="robot0:mfmiddle" pos="0 0 0.045">
 															<inertial pos="0 0 0.012" quat="0.707 0 0 0.707" mass="0.012" diaginertia="1e-05 1e-05 1e-05" />
-															<joint name="robot0:MFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1105" />
+															<joint name="robot0:MFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1105" />
 															<geom class="robot0:D_Vizual" name="robot0:V_mfmiddle" mesh="robot0:F2" />
 															<geom class="robot0:DC_Hand" name="robot0:C_mfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />
 															<body name="robot0:mfdistal" pos="0 0 0.025">
 																<inertial pos="0 0 0.015" quat="0.707 -0.003 0.003 0.707" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
-																<joint name="robot0:MFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1104" />
+																<joint name="robot0:MFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1104" />
 																<geom class="robot0:D_Vizual" name="robot0:V_mfdistal" mesh="robot0:F1" />
 																<geom class="robot0:DC_Hand" name="robot0:C_mfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />
 																<site name="robot0:S_mftip" pos="0 0 0.026" group="3" />
@@ -145,17 +145,17 @@
 													<geom class="robot0:D_Vizual" name="robot0:V_rfknuckle" mesh="robot0:knuckle" />
 													<body name="robot0:rfproximal" pos="0 0 0">
 														<inertial pos="0 0 0.023" quat="0.707 -0.004 0.004 0.707" mass="0.014" diaginertia="1e-05 1e-05 1e-05" />
-														<joint name="robot0:RFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1110" />
+														<joint name="robot0:RFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="0.2" user="1110" />
 														<geom class="robot0:D_Vizual" name="robot0:V_rfproximal" mesh="robot0:F3" />
 														<geom class="robot0:DC_Hand" name="robot0:C_rfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />
 														<body name="robot0:rfmiddle" pos="0 0 0.045">
 															<inertial pos="0 0 0.012" quat="0.707 0 0 0.707" mass="0.012" diaginertia="1e-05 1e-05 1e-05" />
-															<joint name="robot0:RFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1109" />
+															<joint name="robot0:RFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1109" />
 															<geom class="robot0:D_Vizual" name="robot0:V_rfmiddle" mesh="robot0:F2" />
 															<geom class="robot0:DC_Hand" name="robot0:C_rfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />
 															<body name="robot0:rfdistal" pos="0 0 0.025">
 																<inertial pos="0 0 0.015" quat="0.707 -0.003 0.003 0.707" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
-																<joint name="robot0:RFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1108" />
+																<joint name="robot0:RFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1108" />
 																<geom class="robot0:D_Vizual" name="robot0:V_rfdistal" mesh="robot0:F1" pos="0 0 0.001" />
 																<geom class="robot0:DC_Hand" name="robot0:C_rfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />
 																<site name="robot0:S_rftip" pos="0 0 0.026" group="3" />
@@ -175,19 +175,22 @@
 														<geom class="robot0:D_Vizual" name="robot0:V_lfknuckle" mesh="robot0:knuckle" />
 														<body name="robot0:lfproximal" pos="0 0 0">
 															<inertial pos="0 0 0.023" quat="0.707 -0.004 0.004 0.707" mass="0.014" diaginertia="1e-05 1e-05 1e-05" />
-															<joint name="robot0:LFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1114" />
+															<joint name="robot0:LFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="0.2" user="1114" />
 															<geom class="robot0:D_Vizual" name="robot0:V_lfproximal" mesh="robot0:F3" />
-															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />
+															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0125" />
+<!--															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />-->
 															<body name="robot0:lfmiddle" pos="0 0 0.045">
 																<inertial pos="0 0 0.012" quat="0.707 0 0 0.707" mass="0.012" diaginertia="1e-05 1e-05 1e-05" />
-																<joint name="robot0:LFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1113" />
+																<joint name="robot0:LFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1113" />
 																<geom class="robot0:D_Vizual" name="robot0:V_lfmiddle" mesh="robot0:F2" />
-																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />
+																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0065" />
+<!--																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />-->
 																<body name="robot0:lfdistal" pos="0 0 0.025">
 																	<inertial pos="0 0 0.015" quat="0.707 -0.003 0.003 0.707" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
-																	<joint name="robot0:LFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1" user="1112" />
+																	<joint name="robot0:LFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1112" />
 																	<geom class="robot0:D_Vizual" name="robot0:V_lfdistal" mesh="robot0:F1" pos="0 0 0.001" />
-																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />
+																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.006" condim="4" />
+<!--																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />-->
 																	<site name="robot0:S_lftip" pos="0 0 0.026" group="3" />
 																	<site class="robot0:D_Touch" name="robot0:Tch_lftip" />
 																</body>
@@ -201,7 +204,7 @@
 													<geom name="robot0:V_thbase" type="box" group="1" pos="0 0 0" size="0.001 0.001 0.001" />
 													<body name="robot0:thproximal" pos="0 0 0">
 														<inertial pos="0 0 0.017" quat="0.982 0 0.001 0.191" mass="0.016" diaginertia="1e-05 1e-05 1e-05" />
-														<joint name="robot0:THJ3" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.6" stiffness="80.0" springref="1" user="1120" />
+														<joint name="robot0:THJ3" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.6" stiffness="80.0" springref="1.6" user="1120" />
 														<geom class="robot0:D_Vizual" name="robot0:V_thproximal" mesh="robot0:TH3_z" />
 														<geom class="robot0:DC_Hand" name="robot0:C_thproximal" type="capsule" pos="0 0 0.019" size="0.013 0.019" rgba="0.4 0.5 0.6 0.1" />
 														<body name="robot0:thhub" pos="0 0 0.038">
@@ -215,7 +218,7 @@
 																<geom class="robot0:DC_Hand" name="robot0:C_thmiddle" type="capsule" pos="0 0 0.016" size="0.011 0.016" />
 																<body name="robot0:thdistal" pos="0 0 0.032">
 																	<inertial pos="0 0 0.016" quat="0.999 -0.005 -0.047 0.005" mass="0.016" diaginertia="1e-05 1e-05 1e-05" />
-																	<joint name="robot0:THJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.571 0" stiffness="80.0" springref="-1" user="1117" />
+																	<joint name="robot0:THJ0" type="hinge" pos="0 0 0" axis="0 1 0" range="-1.571 0" stiffness="80.0" springref="-0.8" user="1117" />
 																	<geom class="robot0:D_Vizual" name="robot0:V_thdistal" mesh="robot0:TH1_z" />
 																	<geom class="robot0:DC_Hand" name="robot0:C_thdistal" type="capsule" pos="0 0 0.013" size="0.00918 0.013" condim="4" />
 																	<site name="robot0:S_thtip" pos="0 0 0.0275" group="3" />
