@@ -1,5 +1,6 @@
 import shutil, os
 import copy
+import inspect
 
 import numpy as np
 import xml.etree.ElementTree as ET
@@ -19,7 +20,8 @@ class Parameterizer:
         i -- input range: [0, 1], i.e. 0 to 1 --> 0% change to 20% change
         """
         if(i < 0 or i > 1): return None
-
+        sig = inspect.signature(self.object_translate)
+        print(sig.parameters.items())
         # object_translate(self, dx, dy, dz)
         # object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012)
         # robot_change_joint_stiffness(self, v)
@@ -80,8 +82,20 @@ class Parameterizer:
                                material='block_mat', mass='0')
             object.append(cylinder)
 
-    def robot_change_finger_length(self, v):
-        pass
+    def robot_change_finger_length(self, v=0):
+        """
+        Increases current finger lengths by v,
+        i.e.: l_new = l + v
+        Empirically v should be in [0, 0.02]
+        """
+        finger_segment_list = []
+        for element in self.robot_root.iter('body'):
+            for finger_part in ["proximal", "middle", "distal"]:
+                if finger_part in element.get('name'):
+                    finger_segment_list.append(element)
+
+        for finger_segment in finger_segment_list:
+            finger_segment.attrib['pos'] = self._translate(finger_segment.attrib['pos'], 0, 0, v)
 
     def robot_change_joint_stiffness(self, v=80.0):
         """
@@ -161,6 +175,7 @@ class Parameterizer:
         print("Children: ")
         for child in e:
             print(child.tag, child.attrib)
+        print()
 
     def export_XML(self):
         self.lift_tree.write(Parameterizer.modified_lift)
@@ -168,6 +183,8 @@ class Parameterizer:
 
 
 pm = Parameterizer()
+pm.randomize(4)
+# pm.robot_change_finger_length(0.02)
 # pm.robot_change_spring_default(1, 1)
 # pm.robot_change_finger_spring_default(1.571)
 # pm.robot_change_thumb_spring_default(1, 1.6, 0)

@@ -177,20 +177,17 @@
 															<inertial pos="0 0 0.023" quat="0.707 -0.004 0.004 0.707" mass="0.014" diaginertia="1e-05 1e-05 1e-05" />
 															<joint name="robot0:LFJ2" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="0.2" user="1114" />
 															<geom class="robot0:D_Vizual" name="robot0:V_lfproximal" mesh="robot0:F3" />
-															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0125" />
-<!--															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />-->
+															<geom class="robot0:DC_Hand" name="robot0:C_lfproximal" type="capsule" pos="0 0 0.0225" size="0.01 0.0225" />
 															<body name="robot0:lfmiddle" pos="0 0 0.045">
 																<inertial pos="0 0 0.012" quat="0.707 0 0 0.707" mass="0.012" diaginertia="1e-05 1e-05 1e-05" />
 																<joint name="robot0:LFJ1" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1113" />
 																<geom class="robot0:D_Vizual" name="robot0:V_lfmiddle" mesh="robot0:F2" />
-																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0065" />
-<!--																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />-->
+																<geom class="robot0:DC_Hand" name="robot0:C_lfmiddle" type="capsule" pos="0 0 0.0125" size="0.00805 0.0125" />
 																<body name="robot0:lfdistal" pos="0 0 0.025">
 																	<inertial pos="0 0 0.015" quat="0.707 -0.003 0.003 0.707" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
 																	<joint name="robot0:LFJ0" type="hinge" pos="0 0 0" axis="1 0 0" range="0 1.571" stiffness="80.0" springref="1.1" user="1112" />
 																	<geom class="robot0:D_Vizual" name="robot0:V_lfdistal" mesh="robot0:F1" pos="0 0 0.001" />
-																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.006" condim="4" />
-<!--																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />-->
+																	<geom class="robot0:DC_Hand" name="robot0:C_lfdistal" type="capsule" pos="0 0 0.012" size="0.00705 0.012" condim="4" />
 																	<site name="robot0:S_lftip" pos="0 0 0.026" group="3" />
 																	<site class="robot0:D_Touch" name="robot0:Tch_lftip" />
 																</body>
