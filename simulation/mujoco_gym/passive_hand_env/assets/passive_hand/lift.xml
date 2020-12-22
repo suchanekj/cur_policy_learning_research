@@ -36,8 +36,8 @@
 		</body>
 
 		[1.36177789 0.74909766 0.55461739]
-		<body name="object0" pos="1.46 0.75 0.70">
-<!--			<joint name="object0:joint" type="slide" ></joint>-->
+		<body name="object0" pos="1.46 0.75 0.90">
+			<joint name="object0:joint" type="slide" ></joint>
 			<geom size="0.025 0.060" type="cylinder" condim="3" name="object0" material="block_mat" mass="2"></geom>
 			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
 			<body>
