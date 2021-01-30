@@ -1,16 +1,23 @@
 from typing import Callable, Union
 from inspect import signature
 from pathlib import Path
+from Parameterizer import Parameterizer
 
 from reward_functions import placeholder_reward_func
 
 
 class EnvironmentParametrization():
-    pass #TODO: data-structure to store information about scenario
+    def __init__(self,
+                 parameters: list
+    ):
+        self.parameters = parameters
 
 
 class SensorsReading():
-    pass #TODO: data-structure to store sensor readings (positions, forces...)")
+    def __init(self,
+               readings:dict
+    ):
+        self.readings = readings
 
 
 class SimulationAPI:
@@ -29,14 +36,21 @@ class SimulationAPI:
         self.env = None
         self.reward_func = None
         self.specify_reward_function(placeholder_reward_func)
+        self.environmental_parametrization = None
+        self.time_step = None
         self.reset()
 
     def reset(self, randomize=False):
-        raise NotImplementedError()
+        if(randomize):
+            # TODO: split object and hand randomization into 2 functions!!!!
+            pm = Parameterizer()
+            self.environmental_parametrization = EnvironmentParametrization(pm.randomize_all(hand_randomization_multiplier))
+            pm.export_XML()
+
+        self.env.reset()
 
     def export_parameters(self) -> EnvironmentParametrization:
-        """export current parametrization"""
-        raise NotImplementedError()
+        return self.environmental_parametrization
 
     def import_parameters(self, parameters: EnvironmentParametrization):
         """import a parametrization"""
@@ -51,15 +65,14 @@ class SimulationAPI:
 
     def step(self, action):  # specify action type
         """for closed loop control"""
-        raise NotImplementedError()
+
+        self.time_step = env.step(action)
 
     def get_current_reward(self):
-        """for closed loop control"""
-        raise NotImplementedError()
+        return time_step.reward
 
     def get_sensors_reading(self) -> SensorsReading:
-        """for closed loop control"""
-        raise NotImplementedError()
+        return SensorsReading(dict(time_step.observation))
 
     def run(self, actions) -> float:  # specify actions type
         """for open loop control"""

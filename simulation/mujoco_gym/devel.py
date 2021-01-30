@@ -1,7 +1,7 @@
 import gym
 from gym.envs.registration import registry, register, make, spec
 
-from paramatrize import Paramatrizer
+# from paramatrize import Paramatrizer
 
 kwargs = {
     'reward_type': 'sparse',
@@ -16,19 +16,19 @@ register(
 )
 
 env = gym.make('PassiveHandLift-v0')
-# env.reset()
-# for _ in range(1000):
-#     env.render()
-#     print(env.sim.data.sensordata) # height of object (ground is at about -0.14), 3D force by the cylinder, last is verical
-#     env.step(env.action_space.sample()) # take a random action
-# env.close()
+env.reset()
+for _ in range(1000):
+    env.render()
+    print(env.sim.data.sensordata) # height of object (ground is at about -0.14), 3D force by the cylinder, last is verical
+    env.step(env.action_space.sample()) # take a random action
+env.close()
 
 
 env.sim.model.body_mass[-4] = 100 # this changes the model in this session
 # ie. changes preserved even after env.reset(), but doesn't change contents in xml files
 env.reset()
 
-prm = Paramatrizer(env)
+# prm = Paramatrizer(env)
 # prm.create_xml(32)
 # for i in range(3):
 #     print(prm.change_object_pos())
