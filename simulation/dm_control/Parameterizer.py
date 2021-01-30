@@ -7,6 +7,16 @@ import numpy as np
 import xml.etree.ElementTree as ET
 
 class Parameterizer:
+    """
+    Randomizes parameters in XML.
+
+    How to use:
+
+    pm = Parameterizer()
+    pm.randomize_all(0.2) // returns an array of random doubles used to parametrize
+    pm.export_XML()
+
+    """
     xml_folder = os.path.join(os.path.dirname(__file__), 'environments', 'assets')
     unmodified_lift = os.path.join(xml_folder, 'passive_hand_unmodified', 'lift.xml')
     unmodified_robot = os.path.join(xml_folder, 'passive_hand_unmodified', 'robot.xml')
