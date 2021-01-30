@@ -71,11 +71,16 @@ class Parameterizer:
         dx=0.025 * v * self.random11()
         dy=0.025 * v * self.random11()
         dz=0
-        # needs to be updated once dhilan adds in his objects
 
-        object = self.lift_root[4][4]
+        object = [i for i in self.lift_root.iter('body') if i.get('name')=='object0'][0]
+
         pos = object.attrib['pos']
         object.attrib['pos'] = self._translate(pos, dx, dy, dz)
+
+        tables = [i for i in self.lift_root.iter('body')if 'table' in i.get('name')]
+        for table in tables:
+            pos = table.attrib['pos']
+            table.attrib['pos'] = self._translate(pos, dx, dy, dz)
 
     # def object_change_slope(self, r=0.025, rbtm=0.03, h=0.120, t=0.012):
     def object_change_slope(self, v):
@@ -100,7 +105,7 @@ class Parameterizer:
         n = int(h / t)
         dr = 2 * (rbtm - r) / n
 
-        object = self.lift_root[4][4]
+        object = [i for i in self.lift_root.iter('body') if i.get('name')=='object0'][0]
 
         for i in range(n):
             z2 = i * t - h/2
@@ -219,5 +224,6 @@ class Parameterizer:
 
 # Example code:
 pm = Parameterizer()
+# pm.object_translate(0.3)
 pm.randomize_all(0.2)
 pm.export_XML()
