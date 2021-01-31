@@ -18,30 +18,30 @@
 
 		<include file="robot.xml" />
 
-		<body pos="1.300163659727313 0.573069853958568 0.15" name="table0">
+		<body pos="1.309065962231461 0.40121252489234194 0.15" name="table0">
 			<geom size="0.25 0.1725 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.300163659727313 0.928069853958568 0.15" name="table1">
+		<body pos="1.309065962231461 0.7562125248923419 0.15" name="table1">
 			<geom size="0.25 0.1725 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.2526636597273129 0.750569853958568 0.15" name="table2">
+		<body pos="1.261565962231461 0.5787125248923419 0.15" name="table2">
 			<geom size="0.2025 0.005 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.507663659727313 0.750569853958568 0.15" name="table3">
+		<body pos="1.5165659622314611 0.5787125248923419 0.15" name="table3">
 			<geom size="0.0425 0.005 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
 
-		<body name="object0" pos="1.461941549727313 0.749667513958568 0.6">
+		<body name="object0" pos="1.470843852231461 0.5778101848923419 0.6">
 			<joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0" />
 			<geom pos="0 0 -0.06" size="0.001 0.12" type="cylinder" condim="3" name="object0" material="block_mat" mass="2" />
 
 
 			<site name="object0" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere" />
-		<geom name="object00" pos="0 0 -0.06" size="0.011271807019681623 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object01" pos="0 0 -0.048" size="0.014017445615745298 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object02" pos="0 0 -0.036" size="0.016763084211808974 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object03" pos="0 0 -0.023999999999999994" size="0.01950872280787265 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object04" pos="0 0 -0.011999999999999997" size="0.022254361403936326 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object05" pos="0 0 0.0" size="0.025 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object06" pos="0 0 0.01200000000000001" size="0.027745638596063677 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object07" pos="0 0 0.024000000000000007" size="0.030491277192127353 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object08" pos="0 0 0.036000000000000004" size="0.03323691578819103 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object09" pos="0 0 0.048" size="0.035982554384254704 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /></body>
+		<geom name="object00" pos="0 0 -0.06" size="0.013 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object01" pos="0 0 -0.048" size="0.0154 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object02" pos="0 0 -0.036" size="0.0178 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object03" pos="0 0 -0.023999999999999994" size="0.0202 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object04" pos="0 0 -0.011999999999999997" size="0.022600000000000002 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object05" pos="0 0 0.0" size="0.025 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object06" pos="0 0 0.01200000000000001" size="0.0274 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object07" pos="0 0 0.024000000000000007" size="0.0298 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object08" pos="0 0 0.036000000000000004" size="0.0322 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object09" pos="0 0 0.048" size="0.0346 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /></body>
 
 		<light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0" />
 	</worldbody>
