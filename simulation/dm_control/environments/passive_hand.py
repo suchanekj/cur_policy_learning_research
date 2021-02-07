@@ -1,5 +1,5 @@
-from dm_control.mujoco.wrapper import mjbindings
 from dm_control.rl import control
+# from dm_control.mujoco.wrapper import mjbindings
 from dm_control.utils import containers
 from . import rotations
 import os
@@ -13,7 +13,7 @@ MODEL_XML_PATH = os.path.join('passive_hand', 'lift.xml')
 _N_SUBSTEPS = 20
 
 SUITE = containers.TaggedTasks()
-mjlib = mjbindings.mjlib
+# mjlib = mjbindings.mjlib
 
 def _load_physics(model_path):
     if model_path.startswith('/'):
@@ -94,12 +94,15 @@ class Lift(control.Task):
 
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
+        print('Ideal Start Position: ', gripper_target)
         gripper_rotation = np.array([1., 0., 0., 0.])
+        # gripper_rotation = np.array([0,0,0,1])
         physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
         physics.named.data.mocap_quat['robot0:mocap'] = gripper_rotation
-        print(physics.get_actuators_from_site_pos('robot0:grip'))
         for _ in range(50):
             physics.step()
+        # mjlib.mj_inverse(physics.model.ptr, physics.data.ptr)
+        # print(physics.data.qfrc_inverse)
 
     def before_step(self, action, physics):
         """Sets the control signal for the actuators to values in `action`."""
@@ -122,6 +125,9 @@ class Lift(control.Task):
         pos_ctrl *= 0.05  # limit maximum change in position
         action = np.concatenate([pos_ctrl, rot_ctrl])
         utils.mocap_set_action(physics, action)
+
+    def after_step(self, physics):
+        pass
 
     def get_reward(self, physics):
         d = self._goal_distance(physics.grip_position(), self._goal)

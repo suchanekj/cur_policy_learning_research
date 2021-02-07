@@ -1,5 +1,5 @@
 import gym
-import passive_hand_env
+import environments
 from passive_hand_env.passive_hand_env import goal_distance
 from gym.envs.registration import registry, register, make, spec
 import random
@@ -74,7 +74,7 @@ def evalPos(individual):
         # each coodinate for postion
     for i in range(5):
         for j in range(N_SUBSTEPS):
-            # env.render()
+            env.render()
             observation, reward, done, infto = env.step(pos[i])
             sens_data[i] = env.sim.data.sensordata
             print(observation['observation'])
