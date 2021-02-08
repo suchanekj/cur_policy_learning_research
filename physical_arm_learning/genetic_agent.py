@@ -133,6 +133,7 @@ def main():
             rewarded_generation.append([sample, f(sample[0], sample[1])])
         rewarded_generation = np.array(rewarded_generation)
         generation = geneticAgent.get_new_generation(rewarded_generation)
+        print(rewarded_generation)
         print(max(rewarded_generation[:, 1]))
     
 if __name__=='__main__':
