@@ -22,6 +22,8 @@ class SimulationAPI:
         self.domain_name = domain_name
         self.task_name = task_name
 
+        self.reward = 0
+        self.step_index = 0
         self.env = None
         self.reward_func = None
         self.specify_reward_function(placeholder_reward_func)
@@ -40,6 +42,8 @@ class SimulationAPI:
         para_dict = pm.export_XML()
         self.environmental_parametrization = EnvironmentParametrization(para_dict)
         self.env.reset()
+        self.reward = 0
+        self.step_index = 0
 
     def export_parameters(self) -> EnvironmentParametrization:
         return self.environmental_parametrization
@@ -55,7 +59,7 @@ class SimulationAPI:
     def get_action_spec(self):
         return self.env.action_spec()
 
-    def step(self, action):  # specify action type
+    def step(self, action):  # TODO: specify action type
         """for closed loop control"""
         self.time_step = self.env.step(action)
 
@@ -65,8 +69,11 @@ class SimulationAPI:
     def get_sensors_reading(self) -> SensorsReading:
         return SensorsReading(self.time_step.observation)
 
-    def run(self, actions) -> float:  # specify actions type
-        for action in actions:
+    def run(self, actions) -> float:  # TODO: specify actions type
+        for i, action in enumerate(actions):
             self.step(action)
+            self.reward = self.reward_func(self.reward, self.step, i == len(actions) - 1, self.get_sensors_reading())
+            self.step_index += 1
+        return self.reward
 
 
