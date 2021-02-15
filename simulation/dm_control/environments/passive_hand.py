@@ -94,7 +94,10 @@ class Lift(control.Task):
 
         # Move end effector into position.
         gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
-        print('Ideal Start Position: ', gripper_target)
+
+        # commenting out the line below to stop the console spam
+        # print('Ideal Start Position: ', gripper_target)
+
         gripper_rotation = np.array([1., 0., 0., 0.])
         # gripper_rotation = np.array([0,0,0,1])
         physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
