@@ -6,7 +6,7 @@ from simulation.dm_control.utility import SensorsReading
 
 # Check if simulation API works with a given step input
 sapi = SimulationAPI()
-sapi._step(np.array([0, 0, 0, 0, 0], dtype='float64'))
+sapi.step(np.array([0, 0, 0, 0, 0], dtype='float64'))
 print(sapi.get_sensors_reading().grip_velp)
 print(sapi.export_parameters().object_translate)
 

@@ -1,7 +1,7 @@
 from inspect import signature
 from typing import Callable
 
-import environments2
+import environments
 from parameterizer import Parameterizer
 from reward_functions import placeholder_reward_func
 from utility import *
@@ -30,7 +30,7 @@ class SimulationAPI:
         self.reset()
 
     def reset(self, randomize=False, parameters: EnvironmentParametrization = None):
-        self.env = environments2.load(domain_name=self.domain_name, task_name=self.task_name)
+        self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name)
         pm = Parameterizer()
         if (randomize):
             pm.randomize_object(self.object_randomization_multiplier)
@@ -57,9 +57,9 @@ class SimulationAPI:
     def get_action_spec(self):
         return self.env.action_spec()
 
-    def _step(self, action):  # TODO: specify action type
+    def step(self, action):  # TODO: specify action type
         """for closed loop control"""
-        self.time_step = self.env._step(action)
+        self.time_step = self.env.step(action)
 
     def get_current_reward(self):
         return self.time_step.reward
@@ -69,7 +69,7 @@ class SimulationAPI:
 
     def run(self, actions) -> float:  # TODO: specify actions type
         for i, action in enumerate(actions):
-            self._step(action)
-            self.reward = self.reward_func(self.reward, self._step, i == len(actions) - 1, self.get_sensors_reading())
+            self.step(action)
+            self.reward = self.reward_func(self.reward, self.step, i == len(actions) - 1, self.get_sensors_reading())
             self.step_index += 1
         return self.reward

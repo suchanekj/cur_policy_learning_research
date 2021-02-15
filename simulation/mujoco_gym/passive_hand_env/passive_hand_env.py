@@ -10,7 +10,7 @@ def goal_distance(goal_a, goal_b):
 
 
 class PassiveHandEnv(robot_env.RobotEnv):
-    """Superclass for all Fetch environments2.
+    """Superclass for all Fetch environments.
     """
 
     def __init__(
@@ -21,7 +21,7 @@ class PassiveHandEnv(robot_env.RobotEnv):
         """Initializes a new Fetch environment.
 
         Args:
-            model_path (string): path to the environments2 XML file
+            model_path (string): path to the environments XML file
             n_substeps (int): number of substeps the simulation runs on every call to step
             gripper_extra_height (float): additional height above the table when positioning the gripper
             block_gripper (boolean): whether or not the gripper is blocked (i.e. not movable) or not
@@ -187,7 +187,7 @@ class PassiveHandEnv(robot_env.RobotEnv):
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
         for _ in range(10):
-            self.sim._step()
+            self.sim.step()
 
         # Extract information for sampling goals.
         self.initial_gripper_xpos = self.sim.data.get_site_xpos('robot0:grip').copy()

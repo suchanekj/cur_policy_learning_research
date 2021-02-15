@@ -121,7 +121,7 @@ if __name__ == "__main__":
             action = agent.get_action(state)
             actions.append(action)
             states.append(state)
-            next_state, reward, done, info = env._step(action)
+            next_state, reward, done, info = env.step(action)
             
             next_state = np.reshape(next_state, [1, state_size])
             # if an action make the episode end, then gives penalty of -100

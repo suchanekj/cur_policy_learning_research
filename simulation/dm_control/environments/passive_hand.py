@@ -100,7 +100,7 @@ class Lift(control.Task):
         physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
         physics.named.data.mocap_quat['robot0:mocap'] = gripper_rotation
         for _ in range(50):
-            physics._step()
+            physics.step()
         # mjlib.mj_inverse(physics.model.ptr, physics.data.ptr)
         # print(physics.data.qfrc_inverse)
 

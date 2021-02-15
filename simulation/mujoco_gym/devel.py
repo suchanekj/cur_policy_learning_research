@@ -20,7 +20,7 @@ env.reset()
 for _ in range(1000):
     env.render()
     print(env.sim.data.sensordata) # height of object (ground is at about -0.14), 3D force by the cylinder, last is verical
-    env._step(env.action_space.sample()) # take a random action
+    env.step(env.action_space.sample()) # take a random action
 env.close()
 
 

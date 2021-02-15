@@ -51,7 +51,7 @@ while not time_step.last():
     action = np.random.uniform(action_spec.minimum,
                                action_spec.maximum,
                                size=action_spec.shape)
-    time_step = env._step(action)
+    time_step = env.step(action)
     print(time_step.reward, time_step.discount, time_step.observation)
 ```
 If you would like an interactive viewer, use the following sample code:
