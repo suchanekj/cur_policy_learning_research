@@ -35,6 +35,7 @@ This model has been ported from use in OpenAI Gym to use in dm_control. There ar
 
 ##Notes
 To load the passive hand model, please use the loader in the passive_hand_env module. Some sample code can be found below:
+
 ```python
 import environments
 import numpy as np
@@ -47,11 +48,11 @@ action_spec = env.action_spec()
 time_step = env.reset()
 
 while not time_step.last():
-  action = np.random.uniform(action_spec.minimum,
-                             action_spec.maximum,
-                             size=action_spec.shape)
-  time_step = env.step(action)
-  print(time_step.reward, time_step.discount, time_step.observation)
+    action = np.random.uniform(action_spec.minimum,
+                               action_spec.maximum,
+                               size=action_spec.shape)
+    time_step = env._step(action)
+    print(time_step.reward, time_step.discount, time_step.observation)
 ```
 If you would like an interactive viewer, use the following sample code:
 ```python

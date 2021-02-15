@@ -48,7 +48,7 @@ def main():
         for j in range(N_SUBSTEPS):
             env.render()
             time.sleep(3 / N_SUBSTEPS)
-            observation, reward, done, infto = env.step(fin_pos[i])
+            observation, reward, done, infto = env._step(fin_pos[i])
             sens_data[i] = env.sim.data.sensordata
             obs[i] = observation['observation']
 
@@ -75,7 +75,7 @@ def evalPos(individual):
     for i in range(5):
         for j in range(N_SUBSTEPS):
             env.render()
-            observation, reward, done, infto = env.step(pos[i])
+            observation, reward, done, infto = env._step(pos[i])
             sens_data[i] = env.sim.data.sensordata
             print(observation['observation'])
             obs[i] = observation['observation']

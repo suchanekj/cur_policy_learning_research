@@ -32,7 +32,7 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
             pos[i] = individual[5 * i:5 * (i + 1)] - 0.5
         for i in range(num_step):
             for j in range(N_SUBSTEPS):
-                simulation_api.step(pos[i])
+                simulation_api._step(pos[i])
             sens_data[i] = simulation_api.get_sensors_reading()
 
             score += simulation_api.reward_func(  # need to implement a reward function
@@ -71,7 +71,7 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
         pos[i] = individual[5 * i:5 * (i + 1)] - 0.5
     for i in range(num_step):
         for j in range(N_SUBSTEPS):
-            simulation_api.step(pos[i])
+            simulation_api._step(pos[i])
         sens_data[i] = simulation_api.get_sensors_reading()
 
         score += simulation_api.reward_func(  # need to implement a reward function

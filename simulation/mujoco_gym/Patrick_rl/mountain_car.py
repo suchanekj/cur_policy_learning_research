@@ -167,7 +167,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         # get the controller output under a given state
         action = agent.next_action(sess, feed_dict, greedy=greedy)
         # get the next states after taking an action
-        snext, r, done, _ = agent.env.step(action)
+        snext, r, done, _ = agent.env._step(action)
         if render and i % 50 == 0:
             agent.env.render()
         r = reward_custom(s, 3)

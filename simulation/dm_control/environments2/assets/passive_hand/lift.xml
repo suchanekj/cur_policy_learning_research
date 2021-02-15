@@ -18,24 +18,24 @@
 
 		<include file="robot.xml" />
 
-		<body pos="1.3007375372753012 0.5695104533096308 0.15" name="table0">
+		<body pos="1.1377428500980713 0.596558462527309 0.15" name="table0">
 			<geom size="0.25 0.1725 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.3007375372753012 0.9245104533096308 0.15" name="table1">
+		<body pos="1.1377428500980713 0.951558462527309 0.15" name="table1">
 			<geom size="0.25 0.1725 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.253237537275301 0.7470104533096308 0.15" name="table2">
+		<body pos="1.0902428500980712 0.774058462527309 0.15" name="table2">
 			<geom size="0.2025 0.005 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
-		<body pos="1.5082375372753012 0.7470104533096308 0.15" name="table3">
+		<body pos="1.3452428500980713 0.774058462527309 0.15" name="table3">
 			<geom size="0.0425 0.005 0.2" type="box" mass="2000" material="table_mat" />
 		</body>
 
 
-		<body name="object0" pos="1.4625154272753011 0.7461081133096308 0.6">
+		<body name="object0" pos="1.2995207400980713 0.773156122527309 0.6">
 			<joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0" />
 			<geom pos="0 0 -0.06" size="0.001 0.12" type="cylinder" condim="3" name="object0" material="block_mat" mass="2" />
 

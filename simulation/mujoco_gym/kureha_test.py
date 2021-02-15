@@ -184,7 +184,7 @@ def one_trial(agent, sess, grad_buffer, reward_itr, episode_len_itr, i, render =
         obs['desired_goal']: object goal
         '''
         
-        obs, r, done, info = agent.env.step(action)
+        obs, r, done, info = agent.env._step(action)
         # working out the state from obs
         object_rel_pos = obs['observation'][6:9]
         grip_rot = obs['observation'][9:12]
