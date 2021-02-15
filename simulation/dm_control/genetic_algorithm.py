@@ -1,15 +1,13 @@
-from simulation.dm_control.utility import SensorsReading
-from simulation_api import SimulationAPI
-
 import random
-import numpy as np
-import time
 
+import numpy as np
 from deap import algorithms
 from deap import base
 from deap import creator
 from deap import tools
-from deap import gp
+
+from simulation.dm_control.utility import SensorsReading
+from simulation_api import SimulationAPI
 
 
 def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: SensorsReading) -> float:
@@ -23,10 +21,8 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
     # need to have a reward function, and to implement timeout termination and when reward exceeds threshold
 
     num_step = 5  # number of actions each individual takes
-    N_SUBSTEPS = 3
 
     pos = np.zeros((num_step, 5))
-    sens_data = [0] * num_step
 
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
     creator.create("Individual", np.ndarray, fitness=creator.FitnessMax)
@@ -62,7 +58,6 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
     hof = tools.HallOfFame(1, similar=np.array_equal)
 
     final = algorithms.eaSimple(pop, toolbox, cxpb=0, mutpb=0.05, ngen=5, halloffame=hof)
-    # final = algorithms.eaSimple(pop, toolbox, cxpb=0, mutpb=0.05, ngen=200, halloffame=hof)
 
     # code below is to check the output of the HOF individual
     hof_np = np.array(hof)
