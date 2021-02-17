@@ -1,5 +1,5 @@
-import gym
-from gym.envs.registration import registry, register, make, spec
+    import gym
+    from gym.envs.registration import registry, register, make, spec
 
 # from paramatrize import Paramatrizer
 
