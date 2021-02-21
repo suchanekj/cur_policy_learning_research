@@ -65,6 +65,7 @@ class SimulationAPI:
         return self.time_step.reward
 
     def get_sensors_reading(self) -> SensorsReading:
+        assert self.time_step is not None
         return SensorsReading(self.time_step.observation)
 
     def run(self, actions) -> float:  # TODO: specify actions type

@@ -6,7 +6,6 @@ import inspect
 import numpy as np
 import xml.etree.ElementTree as ET
 
-
 class Parameterizer:
     """
     Randomizes parameters in XML.
