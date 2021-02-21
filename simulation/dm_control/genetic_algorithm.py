@@ -11,7 +11,7 @@ from simulation_api import SimulationAPI
 
 
 def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: SensorsReading) -> float:
-    return 0.5
+    return last_reward
 
 
 def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: float = 60):
@@ -57,7 +57,8 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
     # Note: hof returns an array of successful values! So its 1 item in the array
     hof = tools.HallOfFame(1, similar=np.array_equal)
 
-    final = algorithms.eaSimple(pop, toolbox, cxpb=0, mutpb=0.05, ngen=5, halloffame=hof)
+    # final is a list of all the elements in the last iteration (I think)
+    final = algorithms.eaSimple(pop, toolbox, cxpb=0, mutpb=0.05, ngen=200, halloffame=hof)
 
     # code below is to check the output of the HOF individual
     hof_np = np.array(hof)
@@ -67,7 +68,8 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
     print(hof_np)
     print(hof_np[0, 0:5])
 
-    return hof_np[0, 0:5]
+    return hof_np[0]
+    # return hof_np[0, 0:5]
 
 
 if __name__ == '__main__':
