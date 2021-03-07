@@ -62,7 +62,10 @@ class Lift(control.Task):
             'robot0:slide0': 0.405,
             'robot0:slide1': 0.48,
             'robot0:slide2': 0.0,
-            'object0:joint': 0.0,
+
+            # I FOUND THE BUG :DDD 5H OF SEARCHING OMGGGG
+            # PLS NEVER HARDCODE AGAIN :'(((((((((((
+            # 'object0:joint': 0.0,
         }
 
     def _goal_distance(self, goal_a, goal_b):

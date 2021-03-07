@@ -33,14 +33,12 @@
         <body pos="1.5075 0.75 0.15" name="table3">
             <geom size="0.0425 0.005 0.2" type="box" mass="2000" material="table_mat" />
         </body>
-
         
-        <body name="object0" pos="1.46177789 0.74909766 0.6">
+        <body name="object0" pos="1.46177789 0.74909766 0.45">
+            <joint name="object0:joint" type="free" />
 
-            <joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0" />
+
             <geom pos="0 0 -0.06" size="0.001 0.03" type="cylinder" condim="3" name="object0" material="block_mat" mass="2" />
-            
-            
             <site name="object0" pos="0 0 0" size="0.02 0.02 0.10" rgba="1 0 0 1" type="sphere" />
         <geom name="object00" pos="0 0 -0.06" size="0.013 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object01" pos="0 0 -0.048" size="0.0154 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object02" pos="0 0 -0.036" size="0.0178 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object03" pos="0 0 -0.023999999999999994" size="0.0202 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object04" pos="0 0 -0.011999999999999997" size="0.022600000000000002 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object05" pos="0 0 0.0" size="0.025 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object06" pos="0 0 0.01200000000000001" size="0.0274 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object07" pos="0 0 0.024000000000000007" size="0.0298 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object08" pos="0 0 0.036000000000000004" size="0.0322 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /><geom name="object09" pos="0 0 0.048" size="0.0346 0.006" type="cylinder" condim="3" material="block_mat" mass="0" /></body>
 
