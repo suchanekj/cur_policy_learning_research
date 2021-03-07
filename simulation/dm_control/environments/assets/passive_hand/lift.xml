@@ -37,7 +37,12 @@
         
         <body name="object0" pos="1.46177789 0.74909766 0.6">
 
-            <joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10." frictionloss="1.0" />
+            <joint type="slide" axis="0 0 1" />
+			<joint type="slide" axis="0 1 0"  />
+			<joint type="slide" axis="1 0 0"  />
+			<joint type="hinge" axis="0 0 1"  />
+			<joint type="hinge" axis="0 1 0"  />
+			<joint type="hinge" axis="1 0 0"  />
             <geom pos="0 0 -0.06" size="0.001 0.03" type="cylinder" condim="3" name="object0" material="block_mat" mass="2" />
             
             
