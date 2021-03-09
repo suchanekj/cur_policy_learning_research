@@ -35,11 +35,11 @@
             <geom size="0.0425 0.005 0.2" type="box" mass="2000" material="table_mat"></geom>
         </body>
         <!--		[1.36177789 0.74909766 0.55461739]-->
-        <body name="object0" pos="1.46177789 0.74909766 0.40">
+        <body name="object0" pos="1.46177789 0.74909766 0.45">
             <joint name="object0:joint" type="free"></joint>
 <!--            <joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10."-->
 <!--                   frictionloss="1.0"></joint>-->
-            <geom pos="0 0 -0.06" size="0.001 0.13" type="cylinder" condim="3" name="object0" material="block_mat"
+            <geom pos="0 0 -0.08" size="0.004 0.13" type="cylinder" condim="3" name="object0" material="block_mat"
                   mass="2"></geom>
             <site name="object0" pos="0 0 0" size="0.02 0.02 0.10" rgba="1 0 0 1" type="sphere"></site>
         </body>
