@@ -20,7 +20,7 @@ def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: S
     # -dist: smaller dist is better
     # -relv: smaller relative velocity is better
     # height: object move higher is better
-    score = last_reward + 5 * (-dist) + (-relv) + height  #
+    score = last_reward + 5 * (-dist) + (-relv) + 5*height  #
     return score
 
 
