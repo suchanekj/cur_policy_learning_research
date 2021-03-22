@@ -244,12 +244,13 @@ class Parameterizer:
 
     def random01(self):
         return random.random()
-
+    def get_parameters(self) -> dict:
+        return self.PARAMETER_DICT
     def export_XML(self):
         self.update_XML()
         self.lift_tree.write(Parameterizer.modified_lift)
         self.robot_tree.write(Parameterizer.modified_robot)
-        return self.PARAMETER_DICT
+        # return self.PARAMETER_DICT
 
 # Example code:
 # pm = Parameterizer()

@@ -54,6 +54,9 @@ class SensorsReading():
         d['object_rel_velp'] = self.object_rel_velp
         return d
 
+    def __str__(self):
+        return str(self.to_dict())
+
         # observation=OrderedDict([('grip_pos', array([0.81951357, 0.34050714, 0.51620168])),
         # ('grip_velp', array([-1.37942599,  0.23459532, -0.04909928])),
         # ('grip_velr', array([-5.98888446,  1.09242198, -1.64533542])),

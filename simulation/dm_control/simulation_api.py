@@ -30,18 +30,34 @@ class SimulationAPI:
         self.reset()
 
     def reset(self, randomize=False, parameters: EnvironmentParametrization = None):
+        """
+        Resets simulation. After a run the hand will be in some weird position so
+        you need to call this function to put it back into place. And when resetting
+        you can also choose to randomise the parameters of the simulation as well.
+
+        :param randomize: whether to randomize the inputs
+        :param parameters: set simulation to a specific set of parameters
+        """
         self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name)
         pm = Parameterizer()
-        if (randomize):
-            pm.randomize_object(self.object_randomization_multiplier)
-            pm.randomize_robot(self.hand_randomization_multiplier)
-        if parameters is not None:
-            pm.set_all(parameters.to_dict())
-        para_dict = pm.export_XML()
+        if randomize or (parameters is not None):
+            if (randomize):
+                pm.randomize_object(self.object_randomization_multiplier)
+                pm.randomize_robot(self.hand_randomization_multiplier)
+            if parameters is not None:
+                pm.set_all(parameters.to_dict())
+            pm.export_XML()
+        para_dict = pm.get_parameters()
         self.environmental_parametrization = EnvironmentParametrization(para_dict)
         self.env.reset()
         self.reward = 0
         self.step_index = 0
+    def rebuild_XML(self):
+        """
+        rebuilds XML files in passive_hand from XML files in passive_hand_unmodified
+        """
+        pm = Parameterizer()
+        pm.export_XML()
 
     def export_parameters(self) -> EnvironmentParametrization:
         return self.environmental_parametrization
@@ -58,7 +74,9 @@ class SimulationAPI:
         return self.env.action_spec()
 
     def step(self, action):  # TODO: specify action type
-        """for closed loop control"""
+        """
+        for closed loop control
+        """
         self.time_step = self.env.step(action)
 
     def get_current_reward(self):
@@ -69,6 +87,13 @@ class SimulationAPI:
         return SensorsReading(self.time_step.observation)
 
     def run(self, actions) -> float:  # TODO: specify actions type
+        """
+        Runs the simulation using a sequence of actions that the robot should take.
+
+        :param actions:
+            list of actions
+            each action should have the same shape as the action space
+        """
         for i, action in enumerate(actions):
             self.step(action)
             self.reward = self.reward_func(self.reward, self.step, i == len(actions) - 1, self.get_sensors_reading())
