@@ -1,5 +1,5 @@
 from collections import OrderedDict
-
+import numpy as np
 
 # Wrapper classes
 class EnvironmentParametrization():
@@ -30,6 +30,7 @@ class SensorsReading():
     def __init__(self,
                  observation: OrderedDict
                  ):
+        self.grip_pos = observation['grip_pos']
         self.grip_velp = observation['grip_velp']
         self.grip_velr = observation['grip_velr']
         self.grip_rot = observation['grip_rot']
@@ -38,9 +39,11 @@ class SensorsReading():
         self.object_velp = observation['object_velp']
         self.object_velr = observation['object_velr']
         self.object_rel_velp = observation['object_rel_velp']
+        self.simulation_time = observation['simulation_time']
 
     def to_dict(self) -> dict:
         d = {}
+        d['grip_pos'] = self.grip_pos
         d['grip_velp'] = self.grip_velp
         d['grip_velr'] = self.grip_velr
         d['grip_rot'] = self.grip_rot
@@ -60,3 +63,9 @@ class SensorsReading():
         # ('object_velp', array([0.00000000e+00, 0.00000000e+00, 4.66736695e-15])),
         # ('object_velr', array([0., 0., 0.])),
         # ('object_rel_velp', array([ 1.37942599, -0.23459532,  0.04909928]))]))
+
+def clamp(x, min_val, max_val):
+    return max(min_val, min(x, max_val))
+
+def to_action(pos, vert_angle, twist_angle):
+    return np.concatenate([pos, vert_angle, twist_angle], axis=None)

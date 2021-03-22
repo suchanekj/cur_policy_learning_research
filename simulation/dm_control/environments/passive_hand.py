@@ -11,6 +11,7 @@ from dm_env import specs
 _DEFAULT_TIME_LIMIT = 15
 MODEL_XML_PATH = os.path.join('passive_hand', 'lift.xml')
 _N_SUBSTEPS = 20
+OBJECT_INITIAL_HEIGHT = 0.46163282
 
 SUITE = containers.TaggedTasks()
 # mjlib = mjbindings.mjlib
@@ -64,6 +65,7 @@ class Lift(control.Task):
             'robot0:slide2': 0.0,
             'object0:joint': 0.0,
         }
+        self.last_reward = 0
 
     def _goal_distance(self, goal_a, goal_b):
         assert goal_a.shape == goal_b.shape
@@ -113,7 +115,7 @@ class Lift(control.Task):
         action = getattr(action, "continuous_actions", action)
         assert action.shape == (5,)
         action = action.copy()  # ensure that we don't change the action outside of this scope
-        pos_ctrl, gripper_ctrl = action[:3], action[3]
+        pos_ctrl = action[:3]
 
         # arm origin at [[0.725, 0.74910034]]
         arm_origin = np.asarray([0.725, 0.74910034])
@@ -133,11 +135,17 @@ class Lift(control.Task):
         pass
 
     def get_reward(self, physics):
-        d = self._goal_distance(physics.grip_position(), self._goal)
-        if self.reward_type == 'sparse':
-            return -(d > self.distance_threshold).astype(np.float32)
-        else:
-            return -d
+        grip_vel = physics.get_site_vel('robot0:grip', False)
+        grip_velp = grip_vel[3:]
+        object_vel = physics.get_site_vel('object0', False)
+        object_velp = object_vel[3:]
+        object_rel_velp = object_velp - grip_velp
+        object_pos = physics.object_position()
+        dist = np.sum(object_rel_velp ** 2) ** (1 / 2)  # euclidian distance
+        height = object_pos[2] - OBJECT_INITIAL_HEIGHT
+        # score = prev + how close arm is to object + how high the object is
+        self.last_reward = self.last_reward + (-dist) + height  # add previous reward, -ve so small distances win
+        return self.last_reward
 
     def get_observation(self, physics):
         grip_pos = physics.grip_position()
@@ -164,5 +172,6 @@ class Lift(control.Task):
         obs['object_velp'] = object_velp
         obs['object_velr'] = object_velr
         obs['object_rel_velp'] = object_rel_velp
+        obs['simulation_time'] = physics.data.time
 
         return obs
