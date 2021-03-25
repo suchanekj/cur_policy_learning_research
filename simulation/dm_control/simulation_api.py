@@ -29,7 +29,7 @@ class SimulationAPI:
         self.time_step = None
         self.reset()
 
-    def reset(self, randomize=False, parameters: EnvironmentParametrization = None):
+    def reset(self, randomize=False, parameters: EnvironmentParametrization = None, task_parameters: dict = None):
         """
         Resets simulation. After a run the hand will be in some weird position so
         you need to call this function to put it back into place. And when resetting
@@ -37,8 +37,9 @@ class SimulationAPI:
 
         :param randomize: whether to randomize the inputs
         :param parameters: set simulation to a specific set of parameters
+        :param task_parameters: parameters to pass to task initialization
         """
-        self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name)
+        self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name, task_kwargs=task_parameters)
         pm = Parameterizer()
         if randomize or (parameters is not None):
             if (randomize):

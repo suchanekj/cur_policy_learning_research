@@ -72,3 +72,6 @@ def clamp(x, min_val, max_val):
 
 def to_action(pos, vert_angle, twist_angle):
     return np.concatenate([pos, vert_angle, twist_angle], axis=None)
+
+def normalize(v):
+    return v / np.linalg.norm(v)
