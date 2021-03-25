@@ -45,6 +45,7 @@ class Parameterizer:
             self.robot_change_friction
         ]
         for func in FUNC_ARR:
+            print('updated', func.__name__)
             func(self.PARAMETER_DICT[func.__name__])
 
     def set_all(self, d: dict):
@@ -125,7 +126,7 @@ class Parameterizer:
         t -- thickness of each slice
         """
 
-        r = 0.025
+        r = 0.03 #0.025
         rbtm = 0.013 + self.random11() * v * 0.012
         h = 0.120
         t = 0.012

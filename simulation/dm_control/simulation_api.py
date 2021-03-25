@@ -39,7 +39,6 @@ class SimulationAPI:
         :param parameters: set simulation to a specific set of parameters
         :param task_parameters: parameters to pass to task initialization
         """
-        self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name, task_kwargs=task_parameters)
         pm = Parameterizer()
         if randomize or (parameters is not None):
             if (randomize):
@@ -50,6 +49,8 @@ class SimulationAPI:
             pm.export_XML()
         para_dict = pm.get_parameters()
         self.environmental_parametrization = EnvironmentParametrization(para_dict)
+        self.env = environments.load(domain_name=self.domain_name, task_name=self.task_name,
+                                     task_kwargs=task_parameters)
         self.env.reset()
         self.reward = 0
         self.step_index = 0
