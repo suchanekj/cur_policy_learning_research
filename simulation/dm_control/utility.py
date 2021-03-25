@@ -3,26 +3,41 @@ import numpy as np
 
 # Wrapper classes
 class EnvironmentParametrization():
+    DEFAULT = {
+        'object_translate': 0.0,
+        'object_change_slope': 0.0,
+        'robot_change_finger_length': 0.0,
+        'robot_change_joint_stiffness': 0.0,
+        'robot_change_finger_spring_default': 0.0,
+        'robot_change_thumb_spring_default': 0.0,
+        'robot_change_friction': 0.0
+    }
     def __init__(self,
                  parameters: dict
                  ):
-        self.object_translate = parameters['object_translate']
-        self.object_change_slope = parameters['object_change_slope']
-        self.robot_change_finger_length = parameters['robot_change_finger_length']
-        self.robot_change_joint_stiffness = parameters['robot_change_joint_stiffness']
-        self.robot_change_finger_spring_default = parameters['robot_change_finger_spring_default']
-        self.robot_change_thumb_spring_default = parameters['robot_change_thumb_spring_default']
-        self.robot_change_friction = parameters['robot_change_friction']
+        self.object_translate = None
+        self.object_change_slope = None
+        self.robot_change_finger_length = None
+        self.robot_change_joint_stiffness = None
+        self.robot_change_finger_spring_default = None
+        self.robot_change_thumb_spring_default = None
+        self.robot_change_friction = None
+
+        for key in dir(self):
+            if key in parameters:
+                setattr(self, key, parameters[key])
+            else:
+                setattr(self, key, EnvironmentParametrization.DEFAULT[key])
+
+    def __dir__(self):
+        return ('object_translate', 'object_change_slope', 'robot_change_finger_length', 'robot_change_joint_stiffness',
+                'robot_change_finger_spring_default', 'robot_change_thumb_spring_default', 'robot_change_friction')
 
     def to_dict(self) -> dict:
+        names = dir(self)
         d = {}
-        d['object_translate'] = self.object_translate
-        d['object_change_slope'] = self.object_change_slope
-        d['robot_change_finger_length'] = self.robot_change_finger_length
-        d['robot_change_joint_stiffness'] = self.robot_change_joint_stiffness
-        d['robot_change_finger_spring_default'] = self.robot_change_finger_spring_default
-        d['robot_change_thumb_spring_default'] = self.robot_change_thumb_spring_default
-        d['robot_change_friction'] = self.robot_change_friction
+        for key in names:
+            d[key] = getattr(self, key)
         return d
 
 

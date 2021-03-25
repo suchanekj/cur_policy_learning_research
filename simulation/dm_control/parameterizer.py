@@ -5,6 +5,7 @@ import inspect
 
 import numpy as np
 import xml.etree.ElementTree as ET
+import utility
 
 class Parameterizer:
     """
@@ -18,15 +19,7 @@ class Parameterizer:
 
     """
     TOTAL_PARAMETERS = 7
-    PARAMETER_DICT = {
-        'object_translate': 0.0,
-        'object_change_slope': 0.0,
-        'robot_change_finger_length': 0.0,
-        'robot_change_joint_stiffness': 0.0,
-        'robot_change_finger_spring_default': 0.0,
-        'robot_change_thumb_spring_default': 0.0,
-        'robot_change_friction': 0.0
-    }
+    PARAMETER_DICT = utility.EnvironmentParametrization.DEFAULT.copy()
 
     xml_folder = os.path.join(os.path.dirname(__file__), 'environments', 'assets')
     unmodified_lift = os.path.join(xml_folder, 'passive_hand_unmodified', 'lift.xml')
@@ -126,7 +119,7 @@ class Parameterizer:
         t -- thickness of each slice
         """
 
-        r = 0.03 #0.025
+        r = 0.035 #0.025
         rbtm = 0.013 + self.random11() * v * 0.012
         h = 0.120
         t = 0.012

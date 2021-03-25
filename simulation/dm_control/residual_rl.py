@@ -9,7 +9,9 @@ from simulation_api import SimulationAPI
 
 # env = environments.load(domain_name='passive_hand', task_name='lift_sparse', task_kwargs={'time_limit': float('20')})  # type: Environment
 simulation_api = SimulationAPI()
-simulation_api.reset(task_parameters={'time_limit': float('20')})
+parameters = utility.EnvironmentParametrization({'object_change_slope':0.0})
+
+simulation_api.reset(parameters=parameters, task_parameters={'time_limit': float('20')})
 
 controller = RobotController()
 # trajectory = SplineTrajectory()
