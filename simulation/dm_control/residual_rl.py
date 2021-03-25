@@ -7,10 +7,9 @@ import numpy as np
 from controller import RobotController, SplineTrajectory, LinearTrajectory
 from simulation_api import SimulationAPI
 
-env = environments.load(domain_name='passive_hand', task_name='lift_sparse', task_kwargs={'time_limit': float('20')})  # type: Environment
-# simulation_api = SimulationAPI()
-# simulation_api.reset(randomize=True, task_parameters={'time_limit': float('20')})
-action_spec = env.action_spec()
+# env = environments.load(domain_name='passive_hand', task_name='lift_sparse', task_kwargs={'time_limit': float('20')})  # type: Environment
+simulation_api = SimulationAPI()
+simulation_api.reset(randomize=True, task_parameters={'time_limit': float('20')})
 
 controller = RobotController()
 # trajectory = SplineTrajectory()
@@ -24,7 +23,8 @@ liftTrajectory.add_state(pos=[1.25, 0.74909766, 0.46112417], vert_rot=0, twist_r
 liftTrajectory.add_state(pos=[1.25, 1, 0.4], vert_rot=0, twist_rot=0)
 liftTrajectory.add_state(pos=[1.4, 1., 0.4], vert_rot=0, twist_rot=0)
 liftTrajectory.add_state(pos=[1.4, 0.74909766, 0.4], vert_rot=0, twist_rot=0)
-liftTrajectory.add_state(pos=[1.4, 0.74909766, 1], vert_rot=0, twist_rot=0)
+liftTrajectory.add_state(pos=[1.4, 0.74909766, 0.4], vert_rot=0, twist_rot=-0.7)
+liftTrajectory.add_state(pos=[1.4, 0.74909766, 1], vert_rot=0, twist_rot=-0.7)
 controller.add_trajectory(liftTrajectory, 12)
 
 def controller_policy(time_step: TimeStep):
@@ -32,4 +32,4 @@ def controller_policy(time_step: TimeStep):
     return controller.get_action(readings)
 
 
-viewer.launch(env, policy=controller_policy)
+viewer.launch(simulation_api.env, policy=controller_policy)
