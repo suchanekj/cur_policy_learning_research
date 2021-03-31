@@ -9,14 +9,25 @@ import utility
 class Trajectory(ABC):
     @abstractmethod
     def eval(self, t):
+        """
+        Evaluates the target state for the trajectory given a normalized time
+
+        :param t: Normalized time (Time normalized based on start and end time)
+        """
         pass
 
     @abstractmethod
     def add_state(self, pos=None, vert_rot=None, twist_rot=None, state=None):
+        """
+
+        """
         pass
 
     @abstractmethod
     def target_state(self):
+        """
+
+        """
         pass
 
     @abstractmethod

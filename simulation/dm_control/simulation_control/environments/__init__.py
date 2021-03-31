@@ -94,4 +94,3 @@ def build_environment(domain_name, task_name, task_kwargs=None,
     task_kwargs = dict(task_kwargs, environment_kwargs=environment_kwargs)
   env = domain.SUITE[task_name](**task_kwargs)
   return env
-

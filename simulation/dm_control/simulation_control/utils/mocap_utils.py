@@ -4,9 +4,8 @@ from dm_control.mujoco.wrapper import mjbindings
 EQ_WELD = mjbindings.enums.mjtEq.mjEQ_WELD
 
 def mocap_set_action(physics, action):
-    """Sets action through a delta in rotation and position of mocap
-
-    Typically in dm_control, actions would be done through actuators, but this is a port of the OpenAI model that does not have actuators
+    """
+    Sets action through a delta in rotation and position of mocap
     """
     if physics.model.nmocap > 0:
         action, _ = np.split(action, (physics.model.nmocap * 7,))
@@ -20,7 +19,8 @@ def mocap_set_action(physics, action):
         physics.data.mocap_quat[:] = physics.data.mocap_quat + quat_delta
 
 def reset_mocap_welds(physics):
-    """Resets the mocap welds that we use for actuation.
+    """
+    Resets the mocap welds that we use for actuation.
     """
     if physics.model.nmocap > 0 and physics.model.eq_data is not None:
         for i in range(physics.model.eq_data.shape[0]):
@@ -30,7 +30,8 @@ def reset_mocap_welds(physics):
     physics.forward()
 
 def reset_mocap2body_xpos(physics):
-    """Resets the position and orientation of the mocap bodies to the same
+    """
+    Resets the position and orientation of the mocap bodies to the same
     values as the bodies they're welded to.
 
     Essentially make sure that the position that the mocap is set to works with the rest of the joints and arms

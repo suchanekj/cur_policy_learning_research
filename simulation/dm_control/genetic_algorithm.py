@@ -9,7 +9,7 @@ from deap import tools
 from tqdm import tqdm
 
 from config import *
-from simulation.dm_control.utility import SensorsReading
+from utility import SensorsReading
 
 
 def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: SensorsReading) -> float:
@@ -26,7 +26,7 @@ def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: S
 
 def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: float = 60, num_hof=1):
     """
-    Run a genetic algorithm on the current simulation scenario until reward exceeds the threshold or timeout is reached
+    Run a genetic algorithm on the current simulation_control scenario until reward exceeds the threshold or timeout is reached
     """
     # need to have a reward function, and to implement timeout termination and when reward exceeds threshold
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))

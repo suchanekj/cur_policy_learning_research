@@ -1,8 +1,6 @@
 from typing import List, Union
 from pathlib import Path
 
-from simulation_api import EnvironmentParametrization, SimulationAPI
-
 
 class ImitationExample:
     pass  #TODO: data-structure to store a EnvironmentParametrization and a solution and able to load and save to a file

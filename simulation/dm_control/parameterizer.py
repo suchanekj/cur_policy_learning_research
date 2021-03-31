@@ -21,7 +21,7 @@ class Parameterizer:
     TOTAL_PARAMETERS = 7
     PARAMETER_DICT = utility.EnvironmentParametrization.DEFAULT.copy()
 
-    xml_folder = os.path.join(os.path.dirname(__file__), 'environments', 'assets')
+    xml_folder = os.path.join(os.path.dirname(__file__), 'simulation_control', 'environments', 'assets')
     unmodified_lift = os.path.join(xml_folder, 'passive_hand_unmodified', 'lift.xml')
     unmodified_robot = os.path.join(xml_folder, 'passive_hand_unmodified', 'robot.xml')
     modified_lift = os.path.join(xml_folder, 'passive_hand', 'lift.xml')

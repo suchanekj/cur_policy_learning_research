@@ -1,11 +1,12 @@
 from dm_control.rl import control
-# from dm_control.mujoco.wrapper import mjbindings
+from dm_control.mujoco.wrapper import mjbindings
 from dm_control.utils import containers
-from . import rotations
 import os
 import numpy as np
 import collections
-from . import base, utils
+from ..utils import mocap_utils
+from simulation.dm_control.simulation_control.environments import base
+from simulation.dm_control.simulation_control.utils import rotations
 from dm_env import specs
 
 _DEFAULT_TIME_LIMIT = 15
@@ -14,7 +15,7 @@ _N_SUBSTEPS = 20
 OBJECT_INITIAL_HEIGHT = 0.46163282
 
 SUITE = containers.TaggedTasks()
-# mjlib = mjbindings.mjlib
+mjlib = mjbindings.mjlib
 
 def _load_physics(model_path):
     if model_path.startswith('/'):
@@ -94,7 +95,7 @@ class Lift(control.Task):
     def _physics_setup(self, physics, initial_qpos):
         for name, value in initial_qpos.items():
             physics.named.data.qpos[name] = value
-        utils.reset_mocap_welds(physics)
+        mocap_utils.reset_mocap_welds(physics)
         physics.forward()
 
         # Move end effector into position.
@@ -107,7 +108,25 @@ class Lift(control.Task):
         # gripper_rotation = np.array([0,0,0,1])
         physics.named.data.mocap_pos['robot0:mocap'] = gripper_target
         physics.named.data.mocap_quat['robot0:mocap'] = gripper_rotation
+
+        # change bitmasks for geoms to stop gripper from colliding with object in initialization
+        n_geoms = physics.named.model.body_geomnum['object0']
+        start_geom = physics.named.model.body_geomadr['object0']
+        init_contype = physics.model.geom_contype[start_geom]
+        init_conaffinity = physics.model.geom_conaffinity[start_geom]
+
+        for i in range(start_geom, start_geom + n_geoms):
+            physics.model.geom_contype[i] = 2
+            physics.model.geom_conaffinity[i] = 2
+
         for _ in range(50):
+            physics.step()
+
+        for i in range(start_geom, start_geom + n_geoms):
+            physics.model.geom_contype[i] = init_contype
+            physics.model.geom_conaffinity[i] = init_conaffinity
+
+        for _ in range(10):
             physics.step()
         # print(physics.model.geom(contype))
         # mjlib.mj_inverse(physics.model.ptr, physics.data.ptr)
@@ -128,12 +147,12 @@ class Lift(control.Task):
         twist_angle = action[4]
 
         rot_ctrl = rotations.quat_mul(rotations.quat_mul(rotations.euler2quat([0., 0., hor_angle]),
-                                        rotations.euler2quat([0., vert_angle, 0.])),
-                                        rotations.euler2quat([twist_angle, 0., 0.]))
+                                                         rotations.euler2quat([0., vert_angle, 0.])),
+                                      rotations.euler2quat([twist_angle, 0., 0.]))
 
         pos_ctrl *= 0.05  # limit maximum change in position
         action = np.concatenate([pos_ctrl, rot_ctrl])
-        utils.mocap_set_action(physics, action)
+        mocap_utils.mocap_set_action(physics, action)
 
     def after_step(self, physics):
         pass
@@ -151,7 +170,7 @@ class Lift(control.Task):
         self.last_reward = self.last_reward + (-dist) + height  # add previous reward, -ve so small distances win
         return self.last_reward
 
-    def get_observation(self, physics):
+    def get_observation(self, physics: Physics):
         grip_pos = physics.grip_position()
         grip_vel = physics.get_site_vel('robot0:grip', False)
         grip_velp = grip_vel[3:]
@@ -177,5 +196,9 @@ class Lift(control.Task):
         obs['object_velr'] = object_velr
         obs['object_rel_velp'] = object_rel_velp
         obs['simulation_time'] = physics.data.time
+
+        # contactForce = np.zeros(6)
+        # mjlib.mj_contactForce(physics.model.ptr, physics.data.ptr, physics.model.name2id('object0','geom'), contactForce)
+        # print(contactForce)
 
         return obs

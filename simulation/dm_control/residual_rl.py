@@ -1,13 +1,11 @@
 from dm_control import viewer
 from dm_env import TimeStep, Environment
-
-import environments
 import utility
 import numpy as np
 from controller import RobotController, SplineTrajectory, LinearTrajectory
 from simulation_api import SimulationAPI
 
-# env = environments.load(domain_name='passive_hand', task_name='lift_sparse', task_kwargs={'time_limit': float('20')})  # type: Environment
+# env = simulation_control.load(domain_name='passive_hand', task_name='lift_sparse', task_kwargs={'time_limit': float('20')})  # type: Environment
 simulation_api = SimulationAPI()
 parameters = utility.EnvironmentParametrization({'object_change_slope':0.0})
 

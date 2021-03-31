@@ -1,4 +1,4 @@
-from simulation.dm_control.simulation_api import SimulationAPI
+from simulation_api import SimulationAPI
 
 HOF_ITERATIONS = 1000  # number of matches that the children fight against each other for
 HOF_POPULATIONS = 100  # number of children that fight each other every iteration
