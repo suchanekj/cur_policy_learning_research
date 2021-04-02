@@ -1,4 +1,5 @@
 import math
+import pathlib
 import random
 from time import time
 import numpy as np
@@ -84,6 +85,7 @@ def evaluate(individual):
 
 
 def save_to_file(hof, path):
+    pathlib.Path(path).mkdir(parents=True, exist_ok=True)
     path += f'hof_it={HOF_ITERATIONS}_pop={HOF_POPULATIONS}_steps={NUM_STEPS}_time={time()}'
     with open(path, 'w') as f:
         for v in hof:
