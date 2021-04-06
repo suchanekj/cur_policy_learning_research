@@ -99,7 +99,8 @@ class Lift(control.Task):
         physics.forward()
 
         # Move end effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
+        gripper_target = np.array([-0.498, 0.10, -0.531 + self.gripper_extra_height]) + physics.grip_position()
+        # gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + physics.grip_position()
 
         # commenting out the line below to stop the console spam
         # print('Ideal Start Position: ', gripper_target)
