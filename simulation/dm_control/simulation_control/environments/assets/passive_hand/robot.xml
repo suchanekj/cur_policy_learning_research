@@ -197,7 +197,7 @@
 												</body>
 												<body name="robot0:thbase" pos="0.034 -0.009 0.029" axisangle="0 1 0 0.785">
 													<inertial pos="0 0 0" mass="0.01" diaginertia="1e-05 1e-05 1e-05" />
-													<joint name="robot0:THJ4" type="hinge" pos="0 0 0" axis="0 0 -1" range="-1.047 1.047" stiffness="80.0" springref="0.1" user="1121" />
+													<joint name="robot0:THJ4" type="hinge" pos="0 0 0" axis="0 0 -1" range="-1.047 1.047" stiffness="80.0" springref="-0.1" user="1121" />
 													<geom name="robot0:V_thbase" type="box" group="1" pos="0 0 0" size="0.001 0.001 0.001" />
 													<body name="robot0:thproximal" pos="0.0 0.0 0.01">
 														<inertial pos="0 0 0.017" quat="0.982 0 0.001 0.191" mass="0.016" diaginertia="1e-05 1e-05 1e-05" />

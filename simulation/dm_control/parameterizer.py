@@ -191,7 +191,7 @@ class Parameterizer:
         b -- thumb base rotation in the palm plane, range [0, 1.6], where 0 is when thumb is closest to the index finger(adduction)
         c -- distal knuckle bending, range [-1.571, 0], where -1.571 is for fully bent
         """
-        a = 0.1 * (1 + v * self.random01())
+        a = -0.1 * (1 + v * self.random01())
         b = 1.6 * (1 + v * self.random01())
         c = -0.8 * (1 + v * self.random01())
         thbase = [i for i in self.robot_root.iter('body') if i.get('name') == 'robot0:thbase'][0]

@@ -168,7 +168,7 @@ class Lift(control.Task):
         object_pos = physics.object_position()
         dist = np.sum((grip_pos - object_pos) ** 2) ** (1 / 2)  # euclidean distance
         height = object_pos[2] - OBJECT_INITIAL_HEIGHT
-        height *= 10
+        height = height * 50
         reward = (-dist) + height
         return reward
 
