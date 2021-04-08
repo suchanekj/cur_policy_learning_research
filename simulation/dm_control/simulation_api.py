@@ -1,10 +1,10 @@
 from inspect import signature
 from typing import Callable
 
-from simulation_control import environments
-from parameterizer import Parameterizer
-from reward_functions import placeholder_reward_func
-from utility import *
+from simulation.dm_control.simulation_control import environments
+from simulation.dm_control.parameterizer import Parameterizer
+from simulation.dm_control.reward_functions import placeholder_reward_func
+from simulation.dm_control.utility import *
 
 
 class SimulationAPI:

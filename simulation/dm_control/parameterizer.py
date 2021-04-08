@@ -5,7 +5,7 @@ import inspect
 
 import numpy as np
 import xml.etree.ElementTree as ET
-import utility
+import simulation.dm_control.utility as utility
 
 class Parameterizer:
     """

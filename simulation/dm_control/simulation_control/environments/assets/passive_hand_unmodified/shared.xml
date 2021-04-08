@@ -1,7 +1,7 @@
 <mujoco>
 
     <equality>
-        <weld body1="robot0:mocap" body2="robot0:gripper_link" solimp="0.5 0.95 0.001" solref="0.02 1"></weld>
+        <weld body1="robot0:mocap" body2="robot0:gripper_link" solimp="0.1 0.5 0.1 0.5 6" solref="0.02 1"></weld>
 <!--        <weld body1="robot0:mocap" body2="robot0:gripper_link" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>-->
     </equality>
     
