@@ -185,6 +185,18 @@ class Lift(control.Task):
         object_rel_pos = object_pos - grip_pos
         object_rel_velp = object_velp - grip_velp
 
+        # contact_force = np.zeros(6)
+        # n_geoms = physics.named.model.body_geomnum['object0']
+        # start_geom = physics.named.model.body_geomadr['object0']
+        # single_contact = np.zeros(6)
+        # for i in range(start_geom, start_geom + n_geoms):
+        #     # mjlib.mj_contactForce(physics.model.ptr, physics.data.ptr, i, single_contact)
+        #     single_contact = physics.data.cfrc_ext[i]
+        #     # print(physics.model.id2name(i, 'geom'), single_contact)
+        #     contact_force += single_contact
+
+        contact_force = physics.data.cfrc_ext[physics.model.name2id('object0', 'body')]
+
         obs = collections.OrderedDict()
 
         obs['grip_pos'] = grip_pos
@@ -197,9 +209,6 @@ class Lift(control.Task):
         obs['object_velr'] = object_velr
         obs['object_rel_velp'] = object_rel_velp
         obs['simulation_time'] = physics.data.time
-
-        # contactForce = np.zeros(6)
-        # mjlib.mj_contactForce(physics.model.ptr, physics.data.ptr, physics.model.name2id('object0','geom'), contactForce)
-        # print(contactForce)
+        obs['object_contact_force'] = contact_force
 
         return obs
