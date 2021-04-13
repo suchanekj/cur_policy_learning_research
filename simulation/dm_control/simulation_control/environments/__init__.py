@@ -84,7 +84,6 @@ def build_environment(domain_name, task_name, task_kwargs=None,
     raise ValueError('Domain {!r} does not exist.'.format(domain_name))
 
   domain = _DOMAINS[domain_name]
-
   if task_name not in domain.SUITE:
     raise ValueError('Level {!r} does not exist in domain {!r}.'.format(
         task_name, domain_name))

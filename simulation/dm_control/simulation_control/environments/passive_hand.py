@@ -159,17 +159,18 @@ class Lift(control.Task):
         pass
 
     def get_reward(self, physics):
+        grip_pos = physics.grip_position()
         grip_vel = physics.get_site_vel('robot0:grip', False)
         grip_velp = grip_vel[3:]
         object_vel = physics.get_site_vel('object0', False)
         object_velp = object_vel[3:]
         object_rel_velp = object_velp - grip_velp
         object_pos = physics.object_position()
-        dist = np.sum(object_rel_velp ** 2) ** (1 / 2)  # euclidian distance
+        dist = np.sum((grip_pos - object_pos) ** 2) ** (1 / 2)  # euclidean distance
         height = object_pos[2] - OBJECT_INITIAL_HEIGHT
-        # score = prev + how close arm is to object + how high the object is
-        self.last_reward = self.last_reward + (-dist) + height  # add previous reward, -ve so small distances win
-        return self.last_reward
+        height = height * 50
+        reward = (-dist) + height
+        return reward
 
     def get_observation(self, physics: Physics):
         grip_pos = physics.grip_position()
@@ -182,8 +183,8 @@ class Lift(control.Task):
         object_vel = physics.get_site_vel('object0', False)
         object_velp = object_vel[3:]
         object_velr = object_vel[:3]
-        object_rel_pos = object_pos - grip_pos
-        object_rel_velp = object_velp - grip_velp
+        # object_rel_pos = object_pos - grip_pos
+        # object_rel_velp = object_velp - grip_velp
 
         # contact_force = np.zeros(6)
         # n_geoms = physics.named.model.body_geomnum['object0']
@@ -204,10 +205,10 @@ class Lift(control.Task):
         obs['grip_velr'] = grip_velr
         obs['grip_rot'] = grip_rot
         obs['object_pos'] = object_pos
-        obs['object_rel_pos'] = object_rel_pos
+        # obs['object_rel_pos'] = object_rel_pos
         obs['object_velp'] = object_velp
         obs['object_velr'] = object_velr
-        obs['object_rel_velp'] = object_rel_velp
+        # obs['object_rel_velp'] = object_rel_velp
         obs['simulation_time'] = physics.data.time
         obs['object_contact_force'] = contact_force
 

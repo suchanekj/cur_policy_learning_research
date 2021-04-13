@@ -39,8 +39,8 @@
             <joint name="object0:joint" type="free"></joint>
 <!--            <joint name="object0:joint" type="slide" axis="0 0 1" damping="0.5" limited="true" range="-0.138 10."-->
 <!--                   frictionloss="1.0"></joint>-->
-            <geom solimp="0.9999999999 0.9999999999 0.001 0.5 2" pos="0 0 -0.08" size="0.004 0.03" type="cylinder" condim="3" name="object0" material="block_mat"
-                  mass="0.5"></geom>
+            <geom solimp="0.9999999999 0.9999999999 0.001 0.5 2" pos="0 0 -0.01" size="0.004 0.10" type="cylinder" condim="3" name="object0" material="block_mat" mass="0.5"></geom>
+<!--            <geom solimp="0.9999999999 0.9999999999 0.001 0.5 2" pos="0 0 -0.08" size="0.004 0.01" type="cylinder" condim="3" name="object0" material="block_mat" mass="0.5"></geom>-->
             <site name="object0" pos="0 0 0" size="0.02 0.02 0.10" rgba="1 0 0 1" type="sphere"></site>
         </body>
 

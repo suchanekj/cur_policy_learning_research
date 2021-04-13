@@ -74,7 +74,13 @@ class DDPGagent:
             target_param.data.copy_(param.data * self.tau + target_param.data * (1.0 - self.tau))
 
     def save(self, path_save):
-        torch.save(self.actor, path_save)
+        torch.save(self.actor, f'{path_save}_actor.pt')
+        torch.save(self.actor_target, f'{path_save}_actor_target.pt')
+        torch.save(self.critic, f'{path_save}_critic.pt')
+        torch.save(self.critic_target, f'{path_save}_critic_target.pt')
 
     def load(self, path_load):
-        self.actor = torch.load(path_load)
+        self.actor = torch.load(f'{path_load}_actor.pt')
+        self.actor_target = torch.load(f'{path_load}_actor_target.pt')
+        self.critic = torch.load(f'{path_load}_critic.pt')
+        self.critic_target = torch.load(f'{path_load}_critic_target.pt')

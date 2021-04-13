@@ -37,6 +37,7 @@ class Actor(nn.Module):
         """
         x = F.relu(self.linear1(state))
         x = F.relu(self.linear2(x))
+        # x = self.linear3(x)
         x = torch.tanh(self.linear3(x))
 
         return x
