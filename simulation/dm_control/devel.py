@@ -6,8 +6,7 @@ from config import *
 from genetic_algorithm import load_hof, evaluate
 from simulation.dm_control.genetic_algorithm import load_hof, evaluate
 
-hof = load_hof(path=f'{HOF_OUTPUT_DIRECTORY}{os.listdir(HOF_OUTPUT_DIRECTORY)[0]}')
-hof = np.asarray([a for i in range(10) for a in hof]).reshape(NUM_STEPS * 10, INPUT_SIZE)
+hof = load_hof(path=f'{HOF_OUTPUT_DIRECTORY}{os.listdir(HOF_OUTPUT_DIRECTORY)[-1]}').reshape(NUM_STEPS * 10, INPUT_SIZE)
 # hof = load_hof(path=f'{HOF_OUTPUT_DIRECTORY}{os.listdir(HOF_OUTPUT_DIRECTORY)[-1]}')\
 #     .reshape(NUM_STEPS, INPUT_SIZE)
 ctr = -1
