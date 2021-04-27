@@ -69,7 +69,7 @@ class SimulationAPI:
         self.reset(parameters=parameters)
 
     def specify_reward_function(self, reward_func: Callable):
-        assert signature(reward_func) == signature(placeholder_reward_func)
+        # assert signature(reward_func) == signature(placeholder_reward_func)
         self.reward_func = reward_func
 
     def get_action_spec(self):

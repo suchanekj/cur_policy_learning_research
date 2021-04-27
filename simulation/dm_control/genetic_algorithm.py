@@ -21,7 +21,8 @@ def temp_reward_func(last_reward: float, step: int, last_step: bool, readings: S
     # -dist: smaller dist is better
     # -relv: smaller relative velocity is better
     # height: object move higher is better
-    score = last_reward + 5 * (-dist) + (-relv) + 100 * height  #
+    print(dist, relv)
+    score = last_reward - dist - 1e3*relv
     return score
 
 
@@ -54,7 +55,7 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
 
     toolbox.register("evaluate", evalReward)
     toolbox.register("mate", tools.cxTwoPoint)
-    toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.1, indpb=0.5)
+    toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=1, indpb=0.1)
 
     toolbox.register("select", tools.selTournament, tournsize=4)
 
@@ -65,9 +66,9 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
     hof = tools.HallOfFame(num_hof, similar=np.array_equal)
 
     # final is a list of all the elements in the last iteration (I think)
-    final = algorithms.eaSimple(pop, toolbox, verbose=
-    False, cxpb=0, mutpb=0.05, ngen=HOF_ITERATIONS, halloffame=hof)
 
+    final = algorithms.eaSimple(pop, toolbox, verbose=
+    False, cxpb=0.5, mutpb=0.1, ngen=0 , halloffame=hof)
     # # code below is to check the output of the HOF individual
     hof_np = np.array(hof)
 
@@ -77,10 +78,10 @@ def solve(simulation_api: SimulationAPI, reward_threshold: float, timeout_s: flo
 
 def evaluate(individual):
     simulation_api = SimulationAPI()
-    pos = np.array(individual).reshape((NUM_STEPS, INPUT_SIZE))
+    pos = np.array(individual).reshape((NUM_STEPS, INPUT_SIZE))-0.5
     simulation_api.reset()
     simulation_api.specify_reward_function(temp_reward_func)
-    score = simulation_api.run(pos)
+    score = simulation_api.run([a for i in range (10) for a in pos])
     return score
 
 
@@ -89,7 +90,7 @@ def save_to_file(hof, path):
     path += f'hof_it={HOF_ITERATIONS}_pop={HOF_POPULATIONS}_steps={NUM_STEPS}_time={time()}'
     with open(path, 'w') as f:
         for v in hof:
-            f.write(f"{v} ")
+            f.write(f"{v-0.5} ")
 
 
 def load_hof(path):
